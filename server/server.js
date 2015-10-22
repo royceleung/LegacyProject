@@ -23,7 +23,7 @@ var port = process.env.PORT || 8080;        // set our port
 
 
 // ROUTING
-app.use(express.static('./../client/app'));  // serve static files
+app.use(express.static(__dirname + '../../client/app'));  // serve static files
 
 // all of our routes will be prefixed with /
 app.use('/', router);
