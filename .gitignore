@@ -3,4 +3,4 @@
 .LSOverride
 
 # Modules
-server/node_modules/
+node_modules/
