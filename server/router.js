@@ -1,6 +1,9 @@
-var express    = require('express');        // call express
-var bodyParser = require('body-parser');
-var router = express.Router();              // get an instance of the express Router
+// Unbalanced ()) Greenfield Project
+// =============================================================================
+
+var express = require('express');        // bring in express
+var bodyParser = require('body-parser'); // bring in body parser for parsing requests
+var router = express.Router();           // create our Express router
 
 router.get('/userinfo', function(req, res) {
   console.log("get method");
@@ -13,4 +16,4 @@ router.post('/userinfo', function(req, res) {
   res.json({ message: 'Hello Greenfield World Post' });   
 });
 
-module.exports = router;
+module.exports = router;  // export router for other modules to use
