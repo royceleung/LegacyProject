@@ -5,6 +5,7 @@
     "body-parser": "~1.0.1",
     "express": "~4.0.0",
     "express-session": "^1.11.3",
-    "mongoose": "^3.6.20"
+    "mongoose": "3.8",
+    "q": "^1.4.1"
   }
 }
