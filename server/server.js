@@ -22,7 +22,7 @@ var port = process.env.PORT || 8080;        // set our port
 // ROUTES FOR OUR API
 // =============================================================================
 
-app.use(express.static('./../public'));
+app.use(express.static('./../client/app'));
 
 
 
