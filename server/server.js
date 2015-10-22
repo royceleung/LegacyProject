@@ -5,14 +5,14 @@ var express = require('express');        // bring in express
 var bodyParser = require('body-parser');  // bring in body parser for parsing requests
 var router = require('./router.js');  // add link to our router file
 // var session = require('express-session');    // enable sessions for user auth
+var User = require('./users/userModel.js');
+var Q = require('q');
 
 var app = express();                 // define our app using express
-
 
 // DATABASE
 var mongoose = require('mongoose');          // enable Mongoose for db
 mongoose.connect('mongodb://localhost/greenfield'); // connect to mongo db named greenfield
-
 
 // configure app to use bodyParser() for request body parsing
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,7 +23,7 @@ var port = process.env.PORT || 8080;        // set our port
 
 
 // ROUTING
-app.use(express.static('./../client/app'));  // serve static files
+app.use(express.static(__dirname + '../../client/app'));  // serve static files
 
 // all of our routes will be prefixed with /
 app.use('/', router);
@@ -34,3 +34,13 @@ app.use('/userinfo', router);
 // SERVER INIT
 app.listen(port);
 console.log('Unbalanced magic is happening on port ' + port);
+
+
+
+//Test database by creating a new user
+// var create = Q.nbind(User.create, User);
+// newUser = {
+//   'user_fb_id' : 12345,
+//   'username' : 'alex'
+// };
+// create(newUser);
