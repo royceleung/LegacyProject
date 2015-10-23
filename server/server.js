@@ -5,8 +5,8 @@ var express = require('express');        // bring in express
 var bodyParser = require('body-parser');  // bring in body parser for parsing requests
 var router = require('./router.js');  // add link to our router file
 // var session = require('express-session');    // enable sessions for user auth
+var Q = require('q');  // promises library
 var User = require('./users/userModel.js');
-var Q = require('q');
 
 var app = express();                 // define our app using express
 
@@ -28,7 +28,10 @@ app.use(express.static(__dirname + '../../client/app'));  // serve static files
 // all of our routes will be prefixed with /
 app.use('/', router);
 app.use('/userinfo', router);
-// more routes for our API will happen here
+app.use('/siteinfo', router);
+app.use('/map', router);
+app.use('/userlocation', router);
+app.use('/userauth', router);
 
 
 // SERVER INIT
