@@ -4,6 +4,7 @@
 var express = require('express');        // bring in express
 var bodyParser = require('body-parser'); // bring in body parser for parsing requests
 var router = require('../router.js');  // connect to our router
+var session = require('express-session');  // to enable user sessions
 
 
 // MAP
@@ -21,16 +22,15 @@ exports.serveMap = function(req, res) {  // TODO: make this work
 
 
 // AUTH & USER
-exports.FBAuth = function() {  // TODO: make this work
-  // talk to FB (http.request?) to confirm user auth
-
-  // fetchUserInfo()
-      // if user not found, postUserInfo()
-
-  // res to client with auth validation
+exports.ensureAuthenticated = function(req, res, next) {  // make sure user auth is valid, use this for anything that needs to be protected
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login')
 };
 
 exports.fetchUserInfo = function() {
+  // from FB example: res.render('account', { user: req.user });
   // TODO: interact with db to get user's info
 };
 
