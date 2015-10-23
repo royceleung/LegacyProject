@@ -16,6 +16,9 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.userpos;
   $scope.sitesResults;
 
+  var infowindow;
+
+
   $scope.userfind = function(){
 
    $scope.map = new google.maps.Map(document.getElementById('map'), {
@@ -23,6 +26,7 @@ angular.module('myApp.home', ['ngRoute'])
      zoom: 10
    });
 
+   infowindow = new google.maps.InfoWindow();
    // Display the tooltip about the location
    //var infoWindow = new google.maps.InfoWindow({map: map});
 
@@ -76,6 +80,15 @@ angular.module('myApp.home', ['ngRoute'])
       map : $scope.map,
       position: place.geometry.location
     });
+
+    console.log(place);
+
+        //Add an event listener for each marker
+    google.maps.event.addListener(marker, 'click', function(){
+      infowindow.setContent(place.name);
+      infowindow.open($scope.map, this);
+    });
+
   };
 
 
@@ -105,9 +118,14 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.sitesResults = results;
         $scope.$apply();
         // Invoke createMarker function to populate map with our results
+
+
         results.forEach(function(place){
           $scope.createMarker(place);
+
         });
+
+
       }
     }
   };
