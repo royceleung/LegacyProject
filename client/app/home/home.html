@@ -67,16 +67,18 @@
             </ul>
           </div>
         </div>
-
       </div>
 
 
+      <button ng-click="filter()" type="button" class="list-group-item">Location</button>
+    <!--   <button type="button" class="list-group-item">Location</button>
       <button type="button" class="list-group-item">Location</button>
       <button type="button" class="list-group-item">Location</button>
       <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
+      <button type="button" class="list-group-item">Location</button> -->
+      <ul>
+        <li ng-repeat="elm in sitesResults">{{elm.name}}</li>
+      </ul>
     </div>
   </div>
 
@@ -84,7 +86,7 @@
 </div>
 
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2gwna7foZrV4In4pDqfP9rLW7hPMLxY&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2gwna7foZrV4In4pDqfP9rLW7hPMLxY&libraries=places&callback=initMap"></script>
 
 
 <script>
