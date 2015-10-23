@@ -11,8 +11,8 @@ var User = require('./users/userModel.js');
 var app = express();                 // define our app using express
 
 // DATABASE
-var mongoose = require('mongoose');          // enable Mongoose for db
-mongoose.connect('mongodb://localhost/greenfield'); // connect to mongo db named greenfield
+// var mongoose = require('mongoose');          // enable Mongoose for db
+// mongoose.connect('mongodb://localhost/greenfield'); // connect to mongo db named greenfield
 
 // configure app to use bodyParser() for request body parsing
 app.use(bodyParser.urlencoded({ extended: true }));
