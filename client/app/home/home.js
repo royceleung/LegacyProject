@@ -18,6 +18,8 @@ angular.module('myApp.home', ['ngRoute'])
 
   var infowindow;
   var markers = [];
+  var geocoder;
+
   $scope.sports = {
     'Basketball' : 'Basketball Court',
     'Soccer' : 'Soccer Field',
@@ -31,16 +33,45 @@ angular.module('myApp.home', ['ngRoute'])
     'Squash' : 'Squash Court'
     };
 
-  $scope.userfind = function(){
+  $scope.changeLocation = function(locationData) {
 
-   $scope.map = new google.maps.Map(document.getElementById('map'), {
-     center: {lat: 37.7833, lng: -122.4167},
-     zoom: 10
+    console.log('change location clicked!');
+
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'address' : locationData}, function(results, status) {
+      console.log('GEOCODER RESULTS', results);
+      if (status == google.maps.GeocoderStatus.OK) {
+        getMap(results[0].geometry.location, 14);
+      } else {
+        alert('Location Change Failed because' + status);
+      }
+    });
+
+  };
+
+  var getMap = function(latLngObj, zoomLevel){
+
+    $scope.map = new google.maps.Map(document.getElementById('map'), {
+     center: latLngObj,
+     zoom: zoomLevel
    });
 
    infowindow = new google.maps.InfoWindow();
-   // Display the tooltip about the location
-   //var infoWindow = new google.maps.InfoWindow({map: map});
+   var image = '../assets/images/centerFlag.png';
+
+   var centerMarker = new google.maps.Marker({
+      position : $scope.map.getCenter(),
+      icon : image
+   });
+
+   //Marker for center of the map
+   centerMarker.setMap($scope.map);
+  };
+
+  $scope.userfind = function(){
+
+    var defaultLocation = {lat: 37.7833, lng: -122.4167};
+    getMap(defaultLocation, 12);
 
    // Try HTML5 geolocation.
    if (navigator.geolocation) {
@@ -127,7 +158,7 @@ angular.module('myApp.home', ['ngRoute'])
     $scope.sitesResults = [];
 
     var request = {
-        location: $scope.userpos,
+        location: $scope.map.getCenter(),
         radius: '2000',  // search radius in meters
         keyword: [keyword]  // we need a way to insert user's selected sport(s) here
         // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
