@@ -123,6 +123,8 @@ angular.module('myApp.home', ['ngRoute'])
     });
     //Empty out  markers array
     markers = [];
+    //Empty out siteResults list
+    $scope.sitesResults = [];
 
     var request = {
         location: $scope.userpos,

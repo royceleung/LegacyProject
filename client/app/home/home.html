@@ -48,7 +48,7 @@
         <div class="col-md-2">
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+              <input type="text" class="form-control" placeholder="Search Sites" ng-model="siteSearch">
             </div>
           </form>
         </div>
@@ -69,15 +69,8 @@
         </div>
       </div>
 
-
-      <button ng-click="filter()" type="button" class="list-group-item">Location</button>
-    <!--   <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button> -->
       <ul>
-        <li ng-repeat="elm in sitesResults" ng-click="siteListClick($index)">{{elm.name}}</li>
+        <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)">{{elm.name}}</li>
       </ul>
     </div>
   </div>
