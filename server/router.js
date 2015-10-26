@@ -52,6 +52,7 @@ router.get('/userauth', passport.authenticate('facebook', { failureRedirect: '/l
    res.redirect('/');
  });
 
+
 passport.use( new FacebookStrategy({  // TODO: figure out how to use this!
   clientID: '1206604026022507',
   clientSecret: 'd3f622183e9aed53fad93ce7b70a9354',
@@ -59,28 +60,32 @@ passport.use( new FacebookStrategy({  // TODO: figure out how to use this!
     enableProof: false
   },
 
-  function(accessToken, refreshToken, profile, done, res) { 
+  function(accessToken, refreshToken, profile, done) { 
    // provides tokens, the user's profile and done...a auth/facebook/callback?
    // User.findOrCreate({ facebookId: profile.id }, function(err, user) {
    //    // TODO: We will want to associate the Facebook account with
    //    // a user record in your database, and return that user instead.
    //    return done(err, user);
    //  });
-  res.redirect('/');
-   console.log("ACCESS:",accessToken,"REFRESH:", refreshToken,"PROFILE:", profile,"DONE:", done);
+process.nextTick(function() {
+  return done(null, profile);
+});
+  // res.redirect('/');
+  //  console.log("ACCESS:",accessToken,"REFRESH:", refreshToken,"PROFILE:", profile,"DONE:", done);
  }
  ));
 
-router.get('/userinfo', utils.ensureAuthenticated, utils.fetchUserInfo);  //method to serve user info if auth is valid
 
-router.get('/login', function(req, res) {   // do we need this??
-  res.render('login', { user: req.user });
-});
+// router.get('/userinfo', utils.ensureAuthenticated, utils.fetchUserInfo);  //method to serve user info if auth is valid
 
-router.get('/logout', function(req, res) {  // do we need this??
-  req.logout();
-  res.redirect('/');
-});
+// router.get('/login', function(req, res) {   // do we need this??
+//   res.render('login', { user: req.user });
+// });
+
+// router.get('/logout', function(req, res) {  // do we need this??
+//   req.logout();
+//   res.redirect('/');
+// });
 
 
 

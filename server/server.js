@@ -16,10 +16,10 @@ var app = express();                 // define our app using express
 var port = process.env.PORT || 8080;        // set our port
 
 
-// // AUTH INIT
-// app.use(session({ secret: 'this is the greenfield' }));
-// app.use(passport.initialize());  // initialize passport
-// app.use(passport.session());  // to support persistent login sessions
+// AUTH INIT
+app.use(session({ secret: 'this is the greenfield' }));
+app.use(passport.initialize());  // initialize passport
+app.use(passport.session());  // to support persistent login sessions
 
 
 // DATABASE
