@@ -17,7 +17,7 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.sitesResults;
 
   var infowindow;
-
+  var markers = [];
 
   $scope.userfind = function(){
 
@@ -75,6 +75,7 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
   $scope.createMarker = function(place) {
+    console.log('anybody?');
     var placeLoc = place.geometry.location;
     var marker = new google.maps.Marker({
       map : $scope.map,
@@ -82,22 +83,29 @@ angular.module('myApp.home', ['ngRoute'])
     });
 
     console.log(place);
+    console.log('INSIDE CREATEMARKER');
 
-        //Add an event listener for each marker
-    google.maps.event.addListener(marker, 'click', function(){
+    //Add an event listener for each marker
+    marker.addListener('click', function(){
+      console.log('MARKER CLICKED!!!');
       infowindow.setContent(place.name);
       infowindow.open($scope.map, this);
     });
 
+    markers.push(marker);
+    console.log('MARKERS ARRAY :', markers);
   };
 
+
+$scope.siteListClick = function($index){
+  //trigger a click event on the markers[$index]
+  google.maps.event.trigger(markers[$index], 'click');
+
+};
 
 
   $scope.filter = function() {
 
-    console.log("filter");
-
-    console.log('userpos', $scope.userpos);
     var request = {
         location: $scope.userpos,
         radius: '2000',  // search radius in meters
@@ -118,11 +126,8 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.sitesResults = results;
         $scope.$apply();
         // Invoke createMarker function to populate map with our results
-
-
         results.forEach(function(place){
           $scope.createMarker(place);
-
         });
 
 
