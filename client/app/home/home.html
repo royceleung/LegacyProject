@@ -77,7 +77,7 @@
       <button type="button" class="list-group-item">Location</button>
       <button type="button" class="list-group-item">Location</button> -->
       <ul>
-        <li ng-repeat="elm in sitesResults">{{elm.name}}</li>
+        <li ng-repeat="elm in sitesResults" ng-click="siteListClick($index)">{{elm.name}}</li>
       </ul>
     </div>
   </div>
