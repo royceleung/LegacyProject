@@ -6,8 +6,8 @@
         <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Sports<span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
-          ...
+        <ul class="dropdown-menu sport">
+          <li ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)">{{ sport }}</li>
         </ul>
       </div>
     </div>
@@ -24,7 +24,7 @@
         <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Date<span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu date">
           ...
         </ul>
       </div>

@@ -18,6 +18,18 @@ angular.module('myApp.home', ['ngRoute'])
 
   var infowindow;
   var markers = [];
+  $scope.sports = {
+    'Basketball' : 'Basketball Court',
+    'Soccer' : 'Soccer Field',
+    'Tennis' : 'Tennis Court',
+    'Baseball' : 'Baseball Field',
+    'Softball' : 'Softball Field',
+    'Gym' : 'Gym',
+    'Rock Climbing' : 'Climbing Gym',
+    'Golf' : 'Golf Course',
+    'Racquetball' : 'Racquetball Court',
+    'Squash' : 'Squash Court'
+    };
 
   $scope.userfind = function(){
 
@@ -97,19 +109,25 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 
-$scope.siteListClick = function($index){
-  //trigger a click event on the markers[$index]
-  google.maps.event.trigger(markers[$index], 'click');
+  $scope.siteListClick = function($index){
+    //trigger a click event on the markers[$index]
+    google.maps.event.trigger(markers[$index], 'click');
 
-};
+  };
 
+  $scope.populateList = function(keyword) {
 
-  $scope.filter = function() {
+    markers.forEach(function(marker) {
+      //iterate over each marker, set them to null
+      marker.setMap(null);
+    });
+    //Empty out  markers array
+    markers = [];
 
     var request = {
         location: $scope.userpos,
         radius: '2000',  // search radius in meters
-        keyword: ['basketball court']  // we need a way to insert user's selected sport(s) here
+        keyword: [keyword]  // we need a way to insert user's selected sport(s) here
         // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
         // rankBy: google.maps.places.RankBy.PROMINENCE or google.maps.places.RankBy.DISTANCE  // prominence is default
     };
