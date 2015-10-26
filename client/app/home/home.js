@@ -16,9 +16,11 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.userpos;
   $scope.sitesResults;
 
+  var image = '../assets/images/centerFlag.png';
   var infowindow;
   var markers = [];
   var geocoder;
+  var centerMarker;
 
   $scope.sports = {
     'Basketball' : 'Basketball Court',
@@ -49,23 +51,33 @@ angular.module('myApp.home', ['ngRoute'])
 
   };
 
-  var getMap = function(latLngObj, zoomLevel){
+  var drawCenterMarker = function(){
+   //Draw new Center Marker
+   centerMarker = new google.maps.Marker({
+    position : $scope.map.getCenter(),
+    icon : image
+  });
 
+   //Marker for center of the map
+   centerMarker.setMap($scope.map);
+  };
+
+  var getMap = function(latLngObj, zoomLevel){
     $scope.map = new google.maps.Map(document.getElementById('map'), {
      center: latLngObj,
      zoom: zoomLevel
    });
 
    infowindow = new google.maps.InfoWindow();
-   var image = '../assets/images/centerFlag.png';
 
-   var centerMarker = new google.maps.Marker({
-      position : $scope.map.getCenter(),
-      icon : image
+   drawCenterMarker();
+
+   //Event Listener for when map center changes
+   $scope.map.addListener('center_changed', function(){
+     //Clear out previous Center Marker
+    centerMarker.setMap(null);
+    drawCenterMarker();
    });
-
-   //Marker for center of the map
-   centerMarker.setMap($scope.map);
   };
 
   $scope.userfind = function(){
