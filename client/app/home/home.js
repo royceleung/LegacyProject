@@ -14,19 +14,26 @@ angular.module('myApp.home', ['ngRoute'])
 
 .controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
 
+// $SCOPE VARIABLES
   $scope.map;
-  $scope.userpos;
+  $scope.userPosition;
   $scope.sitesResults;
+  $scope.currentKeyword;
+  $scope.clickedPosition;
+  $scope.currentRankByFlag;
 
+// OTHER VARIABLES
   var defaultLocation = {
     lat: 37.7833,
     lng: -122.4167
   };
-  var image = '../assets/images/centerFlag.png';
+  var userMarkerImage = '../assets/images/centerFlag.png';
+  var blueDotImage = '../assets/images/bluedot.png';
   var markers = [];
   var infowindow;
   var geocoder;
-  var centerMarker;
+  var userMarker;
+  var searchLocation;
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -70,65 +77,70 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // CREATE A PERSISTENT CENTER MARKER
-  var drawCenterMarker = function() {
-    centerMarker = new google.maps.Marker({  // define new center marker
-      position: $scope.map.getCenter(),
-      icon: image
+  var drawUserMarker = function(position) {
+    if (position == undefined) {
+      position = $scope.map.getCenter();
+    }
+
+    userMarker = new google.maps.Marker({  // define new center marker
+      position: position,
+      icon: userMarkerImage
     });
 
-    centerMarker.setMap($scope.map);  // set the new center marker
+    userMarker.setMap($scope.map);  // set the new center marker
   };
 
 // DRAW A MAP WITH CENTER MARKER, ADD EVENT LISTENER TO REDRAW CENTER MARKER
   var getMap = function(latLngObj, zoomLevel) {
     $scope.map = new google.maps.Map(document.getElementById('map'), {  // draw map
       center: latLngObj,
-      zoom: zoomLevel
+      zoom: zoomLevel,
+      disableDoubleClickZoom: true
     });
 
     infowindow = new google.maps.InfoWindow();  // init infowindow
 
-    drawCenterMarker();  // draw center marker
-
-    $scope.map.addListener('center_changed',  // event listener to redraw center marker on map move
-      function() {
-        centerMarker.setMap(null);
-        drawCenterMarker();
+    $scope.map.addListener('dblclick',  // double-click to set a flag
+      function(event) {
+        if (userMarker) {
+          userMarker.setMap(null);
+        }
+        drawUserMarker(event.latLng);
+        $scope.clickedPosition = event.latLng;
     });
   };
 
 // GEOLOCATE USER'S POSITION
-  $scope.userfind = function(){
+  $scope.userfind = function() {
     getMap(defaultLocation, 12);  // draw map with default location
 
-   if (navigator.geolocation) {  // attempt geolocation if user allows
-     navigator.geolocation.getCurrentPosition(function(position) {
-       $scope.userpos = {
-         lat: position.coords.latitude,
-         lng: position.coords.longitude
-       };
+    if (navigator.geolocation) {  // attempt geolocation if user allows
+      navigator.geolocation.getCurrentPosition(function(position) {
+        $scope.userPosition = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
 
-       var cityCircle = new google.maps.Circle({
-         strokeColor: '#FFFFFF ',
-         strokeOpacity: 1,
-         strokeWeight: 2,
-         fillColor: '#0000FF ',
-         fillOpacity: 0.5,
-         map: $scope.map,
-         center: $scope.userpos,
-         radius: 50
-       });
+        var blueDotMarker = new google.maps.Marker({  // create blueDot marker for user's position
+          position: $scope.userPosition,
+          animation: google.maps.Animation.DROP,
+          icon: blueDotImage
+        });
+        blueDotMarker.setMap($scope.map);  // set the blueDot marker
 
-       $scope.map.setCenter($scope.userpos);  // reset map with user position and closer zoom
-       $scope.map.setZoom(14);
-     }, function() {  // error, but browser supports geolocation
-       handleLocationError(true, infoWindow, $scope.map.getCenter());
-     });
-   } else {  // error, browser doesn't support geolocation
-     handleLocationError(false, infoWindow, $scope.map.getCenter());
-   }
 
-   $scope.$apply();  // force update the $scope
+        $scope.map.setCenter($scope.userPosition);  // reset map with user position and closer zoom
+        $scope.map.setZoom(14);
+      },
+      function() {  // error, but browser supports geolocation
+        handleLocationError(true, infoWindow, $scope.map.getCenter());
+      });
+    } else {  // error, browser doesn't support geolocation
+      handleLocationError(false, infoWindow, $scope.map.getCenter());
+    }
+
+
+     $scope.$apply();  // force update the $scope
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
       infoWindow.setPosition(pos);
@@ -143,7 +155,8 @@ angular.module('myApp.home', ['ngRoute'])
     var placeLoc = place.geometry.location;
     var marker = new google.maps.Marker({
       map: $scope.map,
-      position: place.geometry.location
+      position: place.geometry.location,
+      animation: google.maps.Animation.DROP
     });
 
     marker.addListener('click', function() { // add event listener for each marker
@@ -160,7 +173,31 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // POPULATE SITE LIST FOR SELECTED SPORT
-  $scope.populateList = function(keyword) {
+  $scope.populateList = function(keyword, rankByFlag) {
+    var request;
+    $scope.currentRankByFlag = rankByFlag;
+    
+    if (keyword != undefined) { // if keyword is passed in, save it
+      $scope.currentKeyword = keyword;
+    }
+    if ($scope.clickedPosition == undefined) {  // if no flag set, search around center of map
+      searchLocation = $scope.map.getCenter();
+    } else {  // otherwise search around flag
+      searchLocation = $scope.clickedPosition;
+    }
+    if (rankByFlag) {
+      request = {
+        location: searchLocation,  // determine current center of map
+        keyword: [keyword],  // keyword to search from our search object
+        rankBy: google.maps.places.RankBy.DISTANCE  // rank by Prominence is default, unless indicated by paramter
+      };
+    } else {
+      request = {
+        location: searchLocation,  // determine current center of map
+        radius: '2000',  // search radius in meters
+        keyword: [keyword]  // keyword to search from our search object
+      };
+    }
 
     markers.forEach(function(marker) {
       marker.setMap(null);  // reset current markers on map
@@ -169,18 +206,11 @@ angular.module('myApp.home', ['ngRoute'])
     markers = []; // clear markers array
     $scope.sitesResults = []; // clear site list
 
-    var request = {
-      location: $scope.map.getCenter(),  // determine current center of map
-      radius: '2000',  // search radius in meters
-      keyword: [keyword]  // keyword to search from our search object
-        // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
-        // rankBy: google.maps.places.RankBy.PROMINENCE or google.maps.places.RankBy.DISTANCE  // prominence is default
-    };
-
     var service = new google.maps.places.PlacesService($scope.map);  // init service
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
 
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
+      console.log('results: ', results);
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
