@@ -20,6 +20,7 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.sitesResults;
   $scope.currentKeyword;
   $scope.clickedPosition;
+  $scope.currentRankByFlag;
 
 // OTHER VARIABLES
   var defaultLocation = {
@@ -172,7 +173,10 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // POPULATE SITE LIST FOR SELECTED SPORT
-  $scope.populateList = function(keyword) {
+  $scope.populateList = function(keyword, rankByFlag) {
+    var request;
+    $scope.currentRankByFlag = rankByFlag;
+    
     if (keyword != undefined) { // if keyword is passed in, save it
       $scope.currentKeyword = keyword;
     }
@@ -180,6 +184,19 @@ angular.module('myApp.home', ['ngRoute'])
       searchLocation = $scope.map.getCenter();
     } else {  // otherwise search around flag
       searchLocation = $scope.clickedPosition;
+    }
+    if (rankByFlag) {
+      request = {
+        location: searchLocation,  // determine current center of map
+        keyword: [keyword],  // keyword to search from our search object
+        rankBy: google.maps.places.RankBy.DISTANCE  // rank by Prominence is default, unless indicated by paramter
+      };
+    } else {
+      request = {
+        location: searchLocation,  // determine current center of map
+        radius: '2000',  // search radius in meters
+        keyword: [keyword]  // keyword to search from our search object
+      };
     }
 
     markers.forEach(function(marker) {
@@ -189,18 +206,11 @@ angular.module('myApp.home', ['ngRoute'])
     markers = []; // clear markers array
     $scope.sitesResults = []; // clear site list
 
-    var request = {
-      location: searchLocation,  // determine current center of map
-      radius: '2000',  // search radius in meters
-      keyword: [keyword]  // keyword to search from our search object
-        // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
-        // rankBy: google.maps.places.RankBy.PROMINENCE or google.maps.places.RankBy.DISTANCE  // prominence is default
-    };
-
     var service = new google.maps.places.PlacesService($scope.map);  // init service
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
 
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
+      console.log('results: ', results);
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope

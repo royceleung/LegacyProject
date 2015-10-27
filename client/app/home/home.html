@@ -63,7 +63,7 @@
 
 
     <div class="col-md-4"> <div class="list-group">
-      <button type="button" class="list-group-item" ng-click="populateList(currentKeyword)">Refresh Search</button>
+      <button type="button" class="list-group-item" ng-click="populateList(currentKeyword, currentRankByFlag)">Refresh Search</button>
 
       <div class="container">
         <div class="col-md-2">
@@ -77,14 +77,12 @@
         <div class="col-md-2">
           <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Dropdown
+              Order by...
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li><a href="#">Separated link</a></li>
+              <li ng-click="populateList(currentKeyword, false)">Prominence</li>
+              <li ng-click="populateList(currentKeyword, true)">Distance</li>
             </ul>
           </div>
         </div>
