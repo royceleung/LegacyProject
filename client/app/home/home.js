@@ -15,10 +15,11 @@ angular.module('myApp.home', ['ngRoute'])
 .controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
 
   $scope.map;
-  $scope.userpos;
+  $scope.userPosition;
   $scope.sitesResults;
   $scope.currentKeyword;
-//ljsdhf
+  $scope.clickedPosition;
+
   var defaultLocation = {
     lat: 37.7833,
     lng: -122.4167
@@ -27,7 +28,8 @@ angular.module('myApp.home', ['ngRoute'])
   var markers = [];
   var infowindow;
   var geocoder;
-  var centerMarker;
+  var userMarker;
+  var searchLocation;
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -71,30 +73,36 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // CREATE A PERSISTENT CENTER MARKER
-  var drawCenterMarker = function() {
-    centerMarker = new google.maps.Marker({  // define new center marker
-      position: $scope.map.getCenter(),
+  var drawUserMarker = function(position) {
+    if (position == undefined) {
+      position = $scope.map.getCenter();
+    }
+
+    userMarker = new google.maps.Marker({  // define new center marker
+      position: position,
       icon: image
     });
 
-    centerMarker.setMap($scope.map);  // set the new center marker
+    userMarker.setMap($scope.map);  // set the new center marker
   };
 
 // DRAW A MAP WITH CENTER MARKER, ADD EVENT LISTENER TO REDRAW CENTER MARKER
   var getMap = function(latLngObj, zoomLevel) {
     $scope.map = new google.maps.Map(document.getElementById('map'), {  // draw map
       center: latLngObj,
-      zoom: zoomLevel
+      zoom: zoomLevel,
+      disableDoubleClickZoom: true
     });
 
     infowindow = new google.maps.InfoWindow();  // init infowindow
 
-    drawCenterMarker();  // draw center marker
-
-    $scope.map.addListener('center_changed',  // event listener to redraw center marker on map move
-      function() {
-        centerMarker.setMap(null);
-        drawCenterMarker();
+    $scope.map.addListener('dblclick',  // double-click to set a flag
+      function(event) {
+        if (userMarker) {
+          userMarker.setMap(null);
+        }
+        drawUserMarker(event.latLng);
+        $scope.clickedPosition = event.latLng;
     });
   };
 
@@ -104,7 +112,7 @@ angular.module('myApp.home', ['ngRoute'])
 
    if (navigator.geolocation) {  // attempt geolocation if user allows
      navigator.geolocation.getCurrentPosition(function(position) {
-       $scope.userpos = {
+       $scope.userPosition = {
          lat: position.coords.latitude,
          lng: position.coords.longitude
        };
@@ -116,11 +124,11 @@ angular.module('myApp.home', ['ngRoute'])
          fillColor: '#0000FF ',
          fillOpacity: 0.5,
          map: $scope.map,
-         center: $scope.userpos,
+         center: $scope.userPosition,
          radius: 50
        });
 
-       $scope.map.setCenter($scope.userpos);  // reset map with user position and closer zoom
+       $scope.map.setCenter($scope.userPosition);  // reset map with user position and closer zoom
        $scope.map.setZoom(14);
      },
      function() {  // error, but browser supports geolocation
@@ -166,6 +174,11 @@ angular.module('myApp.home', ['ngRoute'])
     if (keyword != undefined) { // if keyword is passed in, save it
       $scope.currentKeyword = keyword;
     }
+    if ($scope.clickedPosition == undefined) {  // if no flag set, search around center of map
+      searchLocation = $scope.map.getCenter();
+    } else {  // otherwise search around flag
+      searchLocation = $scope.clickedPosition;
+    }
 
     markers.forEach(function(marker) {
       marker.setMap(null);  // reset current markers on map
@@ -175,7 +188,7 @@ angular.module('myApp.home', ['ngRoute'])
     $scope.sitesResults = []; // clear site list
 
     var request = {
-      location: $scope.map.getCenter(),  // determine current center of map
+      location: searchLocation,  // determine current center of map
       radius: '2000',  // search radius in meters
       keyword: [keyword]  // keyword to search from our search object
         // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
