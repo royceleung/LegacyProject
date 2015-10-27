@@ -14,12 +14,14 @@ angular.module('myApp.home', ['ngRoute'])
 
 .controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
 
+// $SCOPE VARIABLES
   $scope.map;
   $scope.userPosition;
   $scope.sitesResults;
   $scope.currentKeyword;
   $scope.clickedPosition;
 
+// OTHER VARIABLES
   var defaultLocation = {
     lat: 37.7833,
     lng: -122.4167
