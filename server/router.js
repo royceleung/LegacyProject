@@ -10,7 +10,11 @@ var session = require('express-session');  // to enable user sessions
 var User = require('./users/userModel.js');
 var router = express.Router();           // create our Express router
 
-
+// router.all('/', function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//   next();
+//  });
 // TODO: make these routes and utility methods work
     // all methods are in utils.js
 router.post('/userlocation', utils.fetchMap);  // method to talk to mapFetch method
