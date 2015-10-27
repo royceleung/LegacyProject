@@ -29,17 +29,17 @@ angular.module('myApp.home', ['ngRoute'])
   var centerMarker;
 
   $scope.sports = {
-    'Basketball' : 'Basketball Court',
-    'Soccer' : 'Soccer Field',
-    'Tennis' : 'Tennis Court',
-    'Baseball' : 'Baseball Field',
-    'Softball' : 'Softball Field',
-    'Gym' : 'Gym',
-    'Rock Climbing' : 'Climbing Gym',
-    'Golf' : 'Golf Course',
-    'Racquetball' : 'Racquetball Court',
-    'Squash' : 'Squash Court'
-    };
+    'Basketball': 'Basketball Court',
+    'Soccer': 'Soccer Field',
+    'Tennis': 'Tennis Court',
+    'Baseball': 'Baseball Field',
+    'Softball': 'Softball Field',
+    'Gym': 'Gym',
+    'Rock Climbing': 'Climbing Gym',
+    'Golf': 'Golf Course',
+    'Racquetball': 'Racquetball Court',
+    'Squash': 'Squash Court'
+  };
 
 
 // AUTH METHODS
