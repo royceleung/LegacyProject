@@ -1,3 +1,6 @@
+// Unbalanced ()) Greenfield Project
+// =============================================================================
+
 'use strict';
 
 angular.module('myApp.home', ['ngRoute'])
@@ -11,14 +14,17 @@ angular.module('myApp.home', ['ngRoute'])
 
 .controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
 
-
   $scope.map;
   $scope.userpos;
   $scope.sitesResults;
 
+  var defaultLocation = {
+    lat: 37.7833,
+    lng: -122.4167
+  };
   var image = '../assets/images/centerFlag.png';
-  var infowindow;
   var markers = [];
+  var infowindow;
   var geocoder;
   var centerMarker;
 
@@ -36,59 +42,66 @@ angular.module('myApp.home', ['ngRoute'])
     };
 
 
+// AUTH METHODS
+  $scope.loginFacebook = function() {
+    return $http({
+      method: 'GET',
+      url: '/auth/facebook'
+    })
+    .then(function (resp) {
+      return resp.data;
+    });
+  };
+
+
+// CHANGE USER'S LOCATION
   $scope.changeLocation = function(locationData) {
+    geocoder = new google.maps.Geocoder();  // init Geocoder
 
-    console.log('change location clicked!');
+    geocoder.geocode(    // get LatLng for given address
+      {'address': locationData},
+      function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          getMap(results[0].geometry.location, 14);  // redraw map with new location
+        } else {
+          alert('Location change failed because: ' + status);
+        }
+    });
+  };
 
-    geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ 'address' : locationData}, function(results, status) {
-      console.log('GEOCODER RESULTS', results);
-      if (status == google.maps.GeocoderStatus.OK) {
-        getMap(results[0].geometry.location, 14);
-      } else {
-        alert('Location Change Failed because' + status);
-      }
+// CREATE A PERSISTENT CENTER MARKER
+  var drawCenterMarker = function() {
+    centerMarker = new google.maps.Marker({  // define new center marker
+      position: $scope.map.getCenter(),
+      icon: image
     });
 
-
+    centerMarker.setMap($scope.map);  // set the new center marker
   };
 
-  var drawCenterMarker = function(){
-   //Draw new Center Marker
-   centerMarker = new google.maps.Marker({
-    position : $scope.map.getCenter(),
-    icon : image
-  });
+// DRAW A MAP WITH CENTER MARKER, ADD EVENT LISTENER TO REDRAW CENTER MARKER
+  var getMap = function(latLngObj, zoomLevel) {
+    $scope.map = new google.maps.Map(document.getElementById('map'), {  // draw map
+      center: latLngObj,
+      zoom: zoomLevel
+    });
 
-   //Marker for center of the map
-   centerMarker.setMap($scope.map);
+    infowindow = new google.maps.InfoWindow();  // init infowindow
+
+    drawCenterMarker();  // draw center marker
+
+    $scope.map.addListener('center_changed',  // event listener to redraw center marker on map move
+      function() {
+        centerMarker.setMap(null);
+        drawCenterMarker();
+    });
   };
 
-  var getMap = function(latLngObj, zoomLevel){
-    $scope.map = new google.maps.Map(document.getElementById('map'), {
-     center: latLngObj,
-     zoom: zoomLevel
-   });
-
-   infowindow = new google.maps.InfoWindow();
-
-   drawCenterMarker();
-
-   //Event Listener for when map center changes
-   $scope.map.addListener('center_changed', function(){
-     //Clear out previous Center Marker
-    centerMarker.setMap(null);
-    drawCenterMarker();
-   });
-  };
-
+// GEOLOCATE USER'S POSITION
   $scope.userfind = function(){
+    getMap(defaultLocation, 12);  // draw map with default location
 
-    var defaultLocation = {lat: 37.7833, lng: -122.4167};
-    getMap(defaultLocation, 12);
-
-   // Try HTML5 geolocation.
-   if (navigator.geolocation) {
+   if (navigator.geolocation) {  // attempt geolocation if user allows
      navigator.geolocation.getCurrentPosition(function(position) {
        $scope.userpos = {
          lat: position.coords.latitude,
@@ -106,99 +119,81 @@ angular.module('myApp.home', ['ngRoute'])
          radius: 50
        });
 
-       // Tooltip position information
-       //infoWindow.setPosition(pos);
-       //infoWindow.setContent('Location found.');
-       $scope.map.setCenter($scope.userpos);
+       $scope.map.setCenter($scope.userpos);  // reset map with user position and closer zoom
        $scope.map.setZoom(14);
-
-
-     }, function() {
+     }, function() {  // error, but browser supports geolocation
        handleLocationError(true, infoWindow, $scope.map.getCenter());
      });
-   } else {
-     // Browser doesn't support Geolocation
+   } else {  // error, browser doesn't support geolocation
      handleLocationError(false, infoWindow, $scope.map.getCenter());
    }
 
-   $scope.$apply();
+   $scope.$apply();  // force update the $scope
 
-   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-     infoWindow.setPosition(pos);
-     infoWindow.setContent(browserHasGeolocation ?
-       'Error: The Geolocation service failed.' :
-       'Error: Your browser doesn\'t support geolocation.');
-   }
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+    };
   };
 
+// CREATE MARKERS FOR SITES
   $scope.createMarker = function(place) {
-    console.log('anybody?');
     var placeLoc = place.geometry.location;
     var marker = new google.maps.Marker({
-      map : $scope.map,
+      map: $scope.map,
       position: place.geometry.location
     });
 
-    console.log(place);
-    console.log('INSIDE CREATEMARKER');
-
-    //Add an event listener for each marker
-    marker.addListener('click', function(){
-      console.log('MARKER CLICKED!!!');
+    marker.addListener('click', function() { // add event listener for each marker
       infowindow.setContent(place.name);
       infowindow.open($scope.map, this);
     });
 
-    markers.push(marker);
-    console.log('MARKERS ARRAY :', markers);
+    markers.push(marker); // add each marker to markers array
   };
 
-
-  $scope.siteListClick = function($index){
-    //trigger a click event on the markers[$index]
-    google.maps.event.trigger(markers[$index], 'click');
-
+// CLICK EVENT LISTENER FOR SITE LIST
+  $scope.siteListClick = function($index) {
+    google.maps.event.trigger(markers[$index], 'click'); // trigger click event on respective marker
   };
 
+// POPULATE SITE LIST FOR SELECTED SPORT
   $scope.populateList = function(keyword) {
 
     markers.forEach(function(marker) {
-      //iterate over each marker, set them to null
-      marker.setMap(null);
+      marker.setMap(null);  // reset current markers on map
     });
-    //Empty out  markers array
-    markers = [];
-    //Empty out siteResults list
-    $scope.sitesResults = [];
+
+    markers = []; // clear markers array
+    $scope.sitesResults = []; // clear site list
 
     var request = {
-        location: $scope.map.getCenter(),
-        radius: '2000',  // search radius in meters
-        keyword: [keyword]  // we need a way to insert user's selected sport(s) here
+      location: $scope.map.getCenter(),  // determine current center of map
+      radius: '2000',  // search radius in meters
+      keyword: [keyword]  // keyword to search from our search object
         // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
         // rankBy: google.maps.places.RankBy.PROMINENCE or google.maps.places.RankBy.DISTANCE  // prominence is default
     };
 
-    // console.log('request: ',request);
+    var service = new google.maps.places.PlacesService($scope.map);  // init service
+    service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
 
-    var service = new google.maps.places.PlacesService($scope.map);
-    service.nearbySearch(request, callback);
-
-    // console.log(service)/
-    function callback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
+    function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
       if (status == google.maps.places.PlacesServiceStatus.OK) {
-        console.log("callback : ",results);
-        $scope.sitesResults = results;
-        $scope.$apply();
-        // Invoke createMarker function to populate map with our results
-        results.forEach(function(place){
+        $scope.sitesResults = results; // populate site list with results
+        $scope.$apply();  // force update the $scope
+        
+        results.forEach(function(place) {  // create markers for results
           $scope.createMarker(place);
         });
-
-
       }
     }
   };
+
+
+
 
 }]);
 
