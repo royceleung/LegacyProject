@@ -26,7 +26,8 @@ angular.module('myApp.home', ['ngRoute'])
     lat: 37.7833,
     lng: -122.4167
   };
-  var image = '../assets/images/centerFlag.png';
+  var userMarkerImage = '../assets/images/centerFlag.png';
+  var blueDotImage = '../assets/images/bluedot.png';
   var markers = [];
   var infowindow;
   var geocoder;
@@ -82,7 +83,7 @@ angular.module('myApp.home', ['ngRoute'])
 
     userMarker = new google.maps.Marker({  // define new center marker
       position: position,
-      icon: image
+      icon: userMarkerImage
     });
 
     userMarker.setMap($scope.map);  // set the new center marker
@@ -112,35 +113,33 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.userfind = function() {
     getMap(defaultLocation, 12);  // draw map with default location
 
-   if (navigator.geolocation) {  // attempt geolocation if user allows
-     navigator.geolocation.getCurrentPosition(function(position) {
-       $scope.userPosition = {
-         lat: position.coords.latitude,
-         lng: position.coords.longitude
-       };
+    if (navigator.geolocation) {  // attempt geolocation if user allows
+      navigator.geolocation.getCurrentPosition(function(position) {
+        $scope.userPosition = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
 
-       var cityCircle = new google.maps.Circle({
-         strokeColor: '#FFFFFF ',
-         strokeOpacity: 1,
-         strokeWeight: 2,
-         fillColor: '#0000FF ',
-         fillOpacity: 0.5,
-         map: $scope.map,
-         center: $scope.userPosition,
-         radius: 50
-       });
+        var blueDotMarker = new google.maps.Marker({  // create blueDot marker for user's position
+          position: $scope.userPosition,
+          animation: google.maps.Animation.DROP,
+          icon: blueDotImage
+        });
+        blueDotMarker.setMap($scope.map);  // set the blueDot marker
 
-       $scope.map.setCenter($scope.userPosition);  // reset map with user position and closer zoom
-       $scope.map.setZoom(14);
-     },
-     function() {  // error, but browser supports geolocation
-       handleLocationError(true, infoWindow, $scope.map.getCenter());
-     });
-   } else {  // error, browser doesn't support geolocation
-     handleLocationError(false, infoWindow, $scope.map.getCenter());
-   }
 
-   $scope.$apply();  // force update the $scope
+        $scope.map.setCenter($scope.userPosition);  // reset map with user position and closer zoom
+        $scope.map.setZoom(14);
+      },
+      function() {  // error, but browser supports geolocation
+        handleLocationError(true, infoWindow, $scope.map.getCenter());
+      });
+    } else {  // error, browser doesn't support geolocation
+      handleLocationError(false, infoWindow, $scope.map.getCenter());
+    }
+
+
+     $scope.$apply();  // force update the $scope
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
       infoWindow.setPosition(pos);
@@ -155,7 +154,8 @@ angular.module('myApp.home', ['ngRoute'])
     var placeLoc = place.geometry.location;
     var marker = new google.maps.Marker({
       map: $scope.map,
-      position: place.geometry.location
+      position: place.geometry.location,
+      animation: google.maps.Animation.DROP
     });
 
     marker.addListener('click', function() { // add event listener for each marker
