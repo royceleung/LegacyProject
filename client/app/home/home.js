@@ -17,7 +17,8 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.map;
   $scope.userpos;
   $scope.sitesResults;
-
+  $scope.currentKeyword;
+//ljsdhf
   var defaultLocation = {
     lat: 37.7833,
     lng: -122.4167
@@ -98,7 +99,7 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // GEOLOCATE USER'S POSITION
-  $scope.userfind = function(){
+  $scope.userfind = function() {
     getMap(defaultLocation, 12);  // draw map with default location
 
    if (navigator.geolocation) {  // attempt geolocation if user allows
@@ -121,7 +122,8 @@ angular.module('myApp.home', ['ngRoute'])
 
        $scope.map.setCenter($scope.userpos);  // reset map with user position and closer zoom
        $scope.map.setZoom(14);
-     }, function() {  // error, but browser supports geolocation
+     },
+     function() {  // error, but browser supports geolocation
        handleLocationError(true, infoWindow, $scope.map.getCenter());
      });
    } else {  // error, browser doesn't support geolocation
@@ -161,6 +163,9 @@ angular.module('myApp.home', ['ngRoute'])
 
 // POPULATE SITE LIST FOR SELECTED SPORT
   $scope.populateList = function(keyword) {
+    if (keyword != undefined) { // if keyword is passed in, save it
+      $scope.currentKeyword = keyword;
+    }
 
     markers.forEach(function(marker) {
       marker.setMap(null);  // reset current markers on map
