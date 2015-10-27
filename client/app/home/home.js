@@ -16,19 +16,74 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.userpos;
   $scope.sitesResults;
 
+  var image = '../assets/images/centerFlag.png';
   var infowindow;
   var markers = [];
+  var geocoder;
+  var centerMarker;
 
-  $scope.userfind = function(){
+  $scope.sports = {
+    'Basketball' : 'Basketball Court',
+    'Soccer' : 'Soccer Field',
+    'Tennis' : 'Tennis Court',
+    'Baseball' : 'Baseball Field',
+    'Softball' : 'Softball Field',
+    'Gym' : 'Gym',
+    'Rock Climbing' : 'Climbing Gym',
+    'Golf' : 'Golf Course',
+    'Racquetball' : 'Racquetball Court',
+    'Squash' : 'Squash Court'
+    };
 
-   $scope.map = new google.maps.Map(document.getElementById('map'), {
-     center: {lat: 37.7833, lng: -122.4167},
-     zoom: 10
+  $scope.changeLocation = function(locationData) {
+
+    console.log('change location clicked!');
+
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'address' : locationData}, function(results, status) {
+      console.log('GEOCODER RESULTS', results);
+      if (status == google.maps.GeocoderStatus.OK) {
+        getMap(results[0].geometry.location, 14);
+      } else {
+        alert('Location Change Failed because' + status);
+      }
+    });
+
+  };
+
+  var drawCenterMarker = function(){
+   //Draw new Center Marker
+   centerMarker = new google.maps.Marker({
+    position : $scope.map.getCenter(),
+    icon : image
+  });
+
+   //Marker for center of the map
+   centerMarker.setMap($scope.map);
+  };
+
+  var getMap = function(latLngObj, zoomLevel){
+    $scope.map = new google.maps.Map(document.getElementById('map'), {
+     center: latLngObj,
+     zoom: zoomLevel
    });
 
    infowindow = new google.maps.InfoWindow();
-   // Display the tooltip about the location
-   //var infoWindow = new google.maps.InfoWindow({map: map});
+
+   drawCenterMarker();
+
+   //Event Listener for when map center changes
+   $scope.map.addListener('center_changed', function(){
+     //Clear out previous Center Marker
+    centerMarker.setMap(null);
+    drawCenterMarker();
+   });
+  };
+
+  $scope.userfind = function(){
+
+    var defaultLocation = {lat: 37.7833, lng: -122.4167};
+    getMap(defaultLocation, 12);
 
    // Try HTML5 geolocation.
    if (navigator.geolocation) {
@@ -97,19 +152,27 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 
-$scope.siteListClick = function($index){
-  //trigger a click event on the markers[$index]
-  google.maps.event.trigger(markers[$index], 'click');
+  $scope.siteListClick = function($index){
+    //trigger a click event on the markers[$index]
+    google.maps.event.trigger(markers[$index], 'click');
 
-};
+  };
 
+  $scope.populateList = function(keyword) {
 
-  $scope.filter = function() {
+    markers.forEach(function(marker) {
+      //iterate over each marker, set them to null
+      marker.setMap(null);
+    });
+    //Empty out  markers array
+    markers = [];
+    //Empty out siteResults list
+    $scope.sitesResults = [];
 
     var request = {
-        location: $scope.userpos,
+        location: $scope.map.getCenter(),
         radius: '2000',  // search radius in meters
-        keyword: ['basketball court']  // we need a way to insert user's selected sport(s) here
+        keyword: [keyword]  // we need a way to insert user's selected sport(s) here
         // openNow: true,  // will only return Places that are currently open, remove if not desired ('false' has no effect)
         // rankBy: google.maps.places.RankBy.PROMINENCE or google.maps.places.RankBy.DISTANCE  // prominence is default
     };

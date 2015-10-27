@@ -6,17 +6,17 @@
         <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Sports<span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
-          ...
+        <ul class="dropdown-menu sport">
+          <li ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)">{{ sport }}</li>
         </ul>
       </div>
     </div>
     <div class="col-md-8">
       <div class="input-group">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button">Search Pick Up Games</button>
+          <button class="btn btn-default" type="button" ng-click="changeLocation(locationData)">Change Location</button>
         </span>
-        <input type="text" class="form-control" placeholder="Location">
+        <input type="text" class="form-control" placeholder="Location" ng-model="locationData">
       </div><!-- /input-group -->
     </div>
     <div class="col-md-2">
@@ -24,7 +24,7 @@
         <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Date<span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu date">
           ...
         </ul>
       </div>
@@ -48,7 +48,7 @@
         <div class="col-md-2">
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+              <input type="text" class="form-control" placeholder="Search Sites" ng-model="siteSearch">
             </div>
           </form>
         </div>
@@ -69,15 +69,8 @@
         </div>
       </div>
 
-
-      <button ng-click="filter()" type="button" class="list-group-item">Location</button>
-    <!--   <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button>
-      <button type="button" class="list-group-item">Location</button> -->
       <ul>
-        <li ng-repeat="elm in sitesResults" ng-click="siteListClick($index)">{{elm.name}}</li>
+        <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)">{{elm.name}}</li>
       </ul>
     </div>
   </div>
