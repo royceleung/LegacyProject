@@ -9,17 +9,21 @@ var Q = require('q');  // promises library
 var session = require('express-session');  // to enable user sessions
 var passport = require('passport');  // auth via passport
 var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via passport
+var cookieParser = require('cookie-parser');
+
+
+
 
 var User = require('./users/userModel.js');
 
 var app = express();                 // define our app using express
 var port = process.env.PORT || 8080;        // set our port
 
-
 // AUTH INIT
 app.use(session({ secret: 'this is the greenfield' }));
 app.use(passport.initialize());  // initialize passport
 app.use(passport.session());  // to support persistent login sessions
+app.use(cookieParser());
 
 
 // DATABASE

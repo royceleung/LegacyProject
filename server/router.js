@@ -9,6 +9,8 @@ var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via pa
 var session = require('express-session');  // to enable user sessions
 var User = require('./users/userModel.js');
 var router = express.Router();           // create our Express router
+var cookieParser = require('cookie-parser');
+
 
 // router.all('/', function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -41,6 +43,17 @@ router.post('/siteinfo' /* method to add/update site info */);
 router.get('/auth/facebook/callback',
    passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
+
+    // Get User info from FB
+    var fbUserInfo = {
+      "fbId":res.req.user.id,
+      "fbUserName":res.req.user.displayName,
+      "fbPicture":res.req.user.photos[0].value,
+    }
+
+    // Set user info in cookies
+    res.cookie('facebook', fbUserInfo);
+
     res.redirect('/');
   });
 
@@ -58,8 +71,10 @@ router.get('/userauth', passport.authenticate('facebook', { failureRedirect: '/l
 
 
 passport.use( new FacebookStrategy({  // TODO: figure out how to use this!
-  clientID: '1206604026022507',
-  clientSecret: 'd3f622183e9aed53fad93ce7b70a9354',
+  // Request special fiedls from facebook
+  profileFields: ['id', 'displayName', 'photos'],
+  clientID: '1664576320455716',
+  clientSecret: '018421cdfca61a8d10f6beacf9dabab4',
     callbackURL: 'http://localhost:8080/auth/facebook/callback',  // where does this go when it returns?
     enableProof: false
   },
@@ -86,10 +101,13 @@ process.nextTick(function() {
 //   res.render('login', { user: req.user });
 // });
 
-// router.get('/logout', function(req, res) {  // do we need this??
-//   req.logout();
-//   res.redirect('/');
-// });
+// Define logout route after logout from facebook
+router.get('/logout', function(req, res) {
+  req.session.destroy(function (err) {
+    res.clearCookie('facebook');
+    res.redirect('/');
+  });
+});
 
 
 
