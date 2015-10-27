@@ -9,7 +9,7 @@ angular.module('myApp.home', ['ngRoute'])
   });
 }])
 
-.controller('homeController', ['$scope', '$log', function($scope, $log) {
+.controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
 
 
   $scope.map;
@@ -35,6 +35,17 @@ angular.module('myApp.home', ['ngRoute'])
     'Squash' : 'Squash Court'
     };
 
+  $scope.loginFacebook = function() {
+     return $http({
+      method: 'GET',
+      url: '/auth/facebook'
+    })
+    .then(function (resp) {
+      return resp.data;
+    });
+
+  };
+
   $scope.changeLocation = function(locationData) {
 
     console.log('change location clicked!');
@@ -48,6 +59,7 @@ angular.module('myApp.home', ['ngRoute'])
         alert('Location Change Failed because' + status);
       }
     });
+
 
   };
 
@@ -121,12 +133,12 @@ angular.module('myApp.home', ['ngRoute'])
 
    $scope.$apply();
 
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-   infoWindow.setPosition(pos);
-   infoWindow.setContent(browserHasGeolocation ?
-     'Error: The Geolocation service failed.' :
-     'Error: Your browser doesn\'t support geolocation.');
-  }
+   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+     infoWindow.setPosition(pos);
+     infoWindow.setContent(browserHasGeolocation ?
+       'Error: The Geolocation service failed.' :
+       'Error: Your browser doesn\'t support geolocation.');
+   }
   };
 
   $scope.createMarker = function(place) {
