@@ -35,16 +35,6 @@ angular.module('myApp.home', ['ngRoute'])
     'Squash' : 'Squash Court'
     };
 
-  $scope.loginFacebook = function() {
-     return $http({
-      method: 'GET',
-      url: '/auth/facebook'
-    })
-    .then(function (resp) {
-      return resp.data;
-    });
-
-  };
 
   $scope.changeLocation = function(locationData) {
 
