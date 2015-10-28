@@ -70,6 +70,7 @@ angular.module('myApp.home', ['ngRoute'])
       function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           getMap(results[0].geometry.location, 14);  // redraw map with new location
+          drawUserMarker(results[0].geometry.location);
         } else {
           alert('Location change failed because: ' + status);
         }
