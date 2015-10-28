@@ -154,6 +154,18 @@ angular.module('myApp.home', ['ngRoute'])
 // CREATE MARKERS FOR SITES
   $scope.createMarker = function(place) {
     var placeLoc = place.geometry.location;
+    var placeVicinity = place.vicinity;
+    var placeName = place.name;
+    var placeOpenNow;
+
+    if (place.opening_hours && place.opening_hours.open_now) {  // not all Places have opening_hours property, will error on variable assign if they don't
+      placeOpenNow = 'Open to play right now!';
+    } else if (place.opening_hours && !place.opening_hours.open_now) {
+      placeOpenNow = 'Closed now, but check back again!';
+    } else {
+      placeOpenNow = '';
+    }
+    
     var marker = new google.maps.Marker({
       map: $scope.map,
       position: place.geometry.location,
@@ -161,7 +173,7 @@ angular.module('myApp.home', ['ngRoute'])
     });
 
     marker.addListener('click', function() { // add event listener for each marker
-      infowindow.setContent(place.name);
+      infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
       infowindow.open($scope.map, this);
     });
 
@@ -208,7 +220,6 @@ angular.module('myApp.home', ['ngRoute'])
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
 
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
-      console.log('results: ', results);
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
