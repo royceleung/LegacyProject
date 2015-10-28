@@ -70,6 +70,7 @@ angular.module('myApp.home', ['ngRoute'])
       function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           getMap(results[0].geometry.location, 14);  // redraw map with new location
+          drawUserMarker(results[0].geometry.location);
         } else {
           alert('Location change failed because: ' + status);
         }
@@ -153,6 +154,18 @@ angular.module('myApp.home', ['ngRoute'])
 // CREATE MARKERS FOR SITES
   $scope.createMarker = function(place) {
     var placeLoc = place.geometry.location;
+    var placeVicinity = place.vicinity;
+    var placeName = place.name;
+    var placeOpenNow;
+
+    if (place.opening_hours && place.opening_hours.open_now) {  // not all Places have opening_hours property, will error on variable assign if they don't
+      placeOpenNow = 'Open to play right now!';
+    } else if (place.opening_hours && !place.opening_hours.open_now) {
+      placeOpenNow = 'Closed now, but check back again!';
+    } else {
+      placeOpenNow = '';
+    }
+    
     var marker = new google.maps.Marker({
       map: $scope.map,
       position: place.geometry.location,
@@ -160,7 +173,7 @@ angular.module('myApp.home', ['ngRoute'])
     });
 
     marker.addListener('click', function() { // add event listener for each marker
-      infowindow.setContent(place.name);
+      infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
       infowindow.open($scope.map, this);
     });
 
@@ -174,7 +187,6 @@ angular.module('myApp.home', ['ngRoute'])
 
 // POPULATE SITE LIST FOR SELECTED SPORT
   $scope.populateList = function(keyword, rankByFlag) {
-    var request;
     $scope.currentRankByFlag = rankByFlag;
     
     if (keyword != undefined) { // if keyword is passed in, save it
@@ -185,18 +197,16 @@ angular.module('myApp.home', ['ngRoute'])
     } else {  // otherwise search around flag
       searchLocation = $scope.clickedPosition;
     }
+    
+    var request = {
+      location: searchLocation,  // determine current center of map
+      keyword: [keyword]  // keyword to search from our search object
+    };
+
     if (rankByFlag) {
-      request = {
-        location: searchLocation,  // determine current center of map
-        keyword: [keyword],  // keyword to search from our search object
-        rankBy: google.maps.places.RankBy.DISTANCE  // rank by Prominence is default, unless indicated by paramter
-      };
+      _.extend(request, { rankBy: google.maps.places.RankBy.DISTANCE });  // rank by Prominence is default, unless indicated by parameter
     } else {
-      request = {
-        location: searchLocation,  // determine current center of map
-        radius: '2000',  // search radius in meters
-        keyword: [keyword]  // keyword to search from our search object
-      };
+      _.extend(request, { radius: '2000' });  // search radius in meters
     }
 
     markers.forEach(function(marker) {
@@ -210,7 +220,6 @@ angular.module('myApp.home', ['ngRoute'])
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
 
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
-      console.log('results: ', results);
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
