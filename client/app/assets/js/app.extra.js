@@ -6,4 +6,11 @@ $(function() {
       $('.refresh-btn').removeClass('refreshing');
     }, 1000);
   })
+
+  $('body').on('click','.sport-item', function() {
+    $('.refresh-btn').addClass('refreshing');
+    setTimeout(function() {
+      $('.refresh-btn').removeClass('refreshing');
+    }, 1000);
+  })
 })

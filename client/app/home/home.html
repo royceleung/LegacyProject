@@ -10,7 +10,7 @@
               Sports<span class="caret"></span>
             </a>
             <ul class="dropdown-menu sport">
-              <li ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)"><a>{{ sport }}</a></li>
+              <li class="sport-item" ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)"><a>{{ sport }}</a></li>
             </ul>
           </li>
           <li class="dropdown">
@@ -67,6 +67,7 @@
 
       <div class="list-group">
         <ul>
+          <p ng-show="!sitesResults.length" class="empty-list">No results found</p>
           <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)">{{elm.name}}</li>
         </ul>
       </div>
