@@ -1,6 +1,9 @@
 {
   "name": "greenfield",
   "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
   "dependencies": {
     "body-parser": "~1.0.1",
     "cookie-parser": "^1.4.0",
