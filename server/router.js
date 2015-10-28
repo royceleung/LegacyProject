@@ -75,7 +75,7 @@ passport.use( new FacebookStrategy({  // TODO: figure out how to use this!
   profileFields: ['id', 'displayName', 'photos'],
   clientID: '1664576320455716',
   clientSecret: '018421cdfca61a8d10f6beacf9dabab4',
-    callbackURL: 'http://localhost:8080/auth/facebook/callback',  // where does this go when it returns?
+    callbackURL: '/auth/facebook/callback',
     enableProof: false
   },
 
