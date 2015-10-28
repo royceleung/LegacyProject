@@ -175,7 +175,6 @@ angular.module('myApp.home', ['ngRoute'])
 
 // POPULATE SITE LIST FOR SELECTED SPORT
   $scope.populateList = function(keyword, rankByFlag) {
-    var request;
     $scope.currentRankByFlag = rankByFlag;
     
     if (keyword != undefined) { // if keyword is passed in, save it
@@ -186,18 +185,16 @@ angular.module('myApp.home', ['ngRoute'])
     } else {  // otherwise search around flag
       searchLocation = $scope.clickedPosition;
     }
+    
+    var request = {
+      location: searchLocation,  // determine current center of map
+      keyword: [keyword]  // keyword to search from our search object
+    };
+
     if (rankByFlag) {
-      request = {
-        location: searchLocation,  // determine current center of map
-        keyword: [keyword],  // keyword to search from our search object
-        rankBy: google.maps.places.RankBy.DISTANCE  // rank by Prominence is default, unless indicated by paramter
-      };
+      _.extend(request, { rankBy: google.maps.places.RankBy.DISTANCE });  // rank by Prominence is default, unless indicated by parameter
     } else {
-      request = {
-        location: searchLocation,  // determine current center of map
-        radius: '2000',  // search radius in meters
-        keyword: [keyword]  // keyword to search from our search object
-      };
+      _.extend(request, { radius: '2000' });  // search radius in meters
     }
 
     markers.forEach(function(marker) {
