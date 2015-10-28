@@ -10,7 +10,7 @@
               Sports<span class="caret"></span>
             </a>
             <ul class="dropdown-menu sport">
-              <li ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)"><a>{{ sport }}</a></li>
+              <li class="sport-item" ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)"><a>{{ sport }}</a></li>
             </ul>
           </li>
           <li class="dropdown">
