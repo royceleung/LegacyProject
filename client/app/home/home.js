@@ -65,6 +65,9 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.changeLocation = function(locationData) {
     geocoder = new google.maps.Geocoder();  // init Geocoder
 
+    // Fix to get the google auto complete address
+    locationData = $('#location-search').val();
+
     geocoder.geocode(    // get LatLng for given address
       {'address': locationData},
       function(results, status) {
