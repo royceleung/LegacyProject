@@ -42,7 +42,7 @@
     <div class="col-xs-2" ng-hide="!fbCookie">
        <p>{{ user.fbUserName }}</p>
     </div>
-    <div class="user-pic col-xs-2" style="background-image:url('{{ user.fbPicture }}')" ng-hide="!fbCookie">
+    <div class="user-pic col-xs-2" ng-style="{'background-image':'url({{ user.fbPicture }})'}" ng-hide="!fbCookie">
     </div>
   </nav>
 </header>
