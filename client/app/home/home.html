@@ -1,81 +1,79 @@
 
-  <div id="home-page">
-  <div class="row">
-    <div class="col-md-2">
-      <div class="btn-group">
-        <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Sports<span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu sport">
-          <li ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)">{{ sport }}</li>
+<div id="home-page">
+
+  <nav class="navbar navbar-default map-navbar row site-selection">
+    <div class="container-fluid">
+      <div id="site-selection-nav">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sports<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu sport">
+              <li ng-repeat="(sport, keyword) in sports" ng-click="populateList(keyword)"><a>{{ sport }}</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Date<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu sport">
+              <li><a>...</a></li>
+            </ul>
+          </li>
         </ul>
-      </div>
-    </div>
-    <div class="col-md-8">
-      <div class="input-group">
-        <!-- <span class="input-group-btn">   "Change Location" button no longer needed!
-          <button class="btn btn-default" type="button" ng-click="changeLocation(locationData)">Change Location</button>
-        </span> -->
-        <form name="change-location" ng-submit="changeLocation(locationData)">
-          <input type="text" class="form-control" placeholder="Change location..." ng-model="locationData" >
+
+        <form name="change-location" class="navbar-form navbar-right address-selection" role="search" ng-submit="changeLocation(locationData)">
+          <div class="form-group">
+            <input id="location-search" type="text" class="form-control" placeholder="Change location..." ng-model="locationData" >
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
         </form>
-      </div><!-- /input-group -->
-    </div>
-    <div class="col-md-2">
-      <div class="btn-group">
-        <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Date<span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu date">
-          ...
-        </ul>
       </div>
     </div>
-  </div>
+  </nav>
 
 
-  <div class="row">
+  <div class="row map-site">
 
+    <div class="col-xs-8" id="map"></div>
 
-    <div class="col-md-8" id="map">
-
-    </div>
-
-
-
-    <div class="col-md-4"> <div class="list-group">
-      <button type="button" class="list-group-item" ng-click="populateList(currentKeyword, currentRankByFlag)">Refresh Search</button>
-
-      <div class="container">
-        <div class="col-md-2">
-          <form class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search sites..." ng-model="siteSearch">
-            </div>
-          </form>
-        </div>
-
-        <div class="col-md-2">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Order by...
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-              <li ng-click="populateList(currentKeyword, false)">Prominence</li>
-              <li ng-click="populateList(currentKeyword, true)">Distance</li>
+    <div class="col-xs-4 site-update-container"> 
+      <nav class="navbar navbar-default map-navbar site-update">
+          <div id="site-update-nav">
+            <ul class="nav navbar-nav">
+              <li class="refresh-btn">
+                <a class="btn btn-default" type="button" ng-click="populateList(currentKeyword, currentRankByFlag)">
+                  <i class="fa fa-refresh"></i>
+                </a>
+              </li>
+              <li class="dropdown">
+                <a class="btn btn-default dropdown-toggle" type="button" id="order-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  Order by...
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="order-by-list">
+                  <li ng-click="populateList(currentKeyword, false)">
+                    <a>Prominence</a>
+                  </li>
+                  <li ng-click="populateList(currentKeyword, true)">
+                    <a>Distance</a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
-        </div>
+      </nav>
+
+      <div class="list-group">
+        <ul>
+          <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)">{{elm.name}}</li>
+        </ul>
       </div>
 
-      <ul>
-        <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)">{{elm.name}}</li>
-      </ul>
     </div>
-  </div>
 
-</div>
+  </div>
 </div>
 
 
@@ -83,9 +81,16 @@
 
 
 <script>
-function initMap() {
-  var scope = $('#map').scope();
-  scope.userfind();
-}
+  function initMap() {
+    var scope = $('#map').scope();
+    scope.userfind();
+    google.maps.event.addDomListener(window, 'load', initialize);
+  }
+
+  function initialize() {
+    var input = document.getElementById('location-search');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+  }
+
 </script>
 

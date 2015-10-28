@@ -7,7 +7,7 @@
 @import "home";
 
 html {
-  background-color: #FFFFFF;
+  background-color: $mainColor;
   -webkit-font-smoothing: antialiased;
   * {
     box-sizing: border-box;
@@ -15,5 +15,6 @@ html {
 }
 
 body {
+  background-color: $mainColor;
 }
 

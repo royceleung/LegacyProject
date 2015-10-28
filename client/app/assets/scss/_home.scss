@@ -1,10 +1,69 @@
 #home-page {
-  #map {
-    min-height : 500px;
-    border: 1px solid black;
+
+  .navbar{
+    &.site-selection {
+      ul {
+        li {
+          &.dropdown {
+            a {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+      .address-selection {
+        #location-search {
+          width: 300px;
+        }
+      }
+    }
   }
-  li {
-  color: black;
-  font-size: 12px;
+
+  .map-site {
+    #map {
+      min-height : 500px;
+      border: 1px solid $secondaryColor;
+    }
+    .site-update {
+      background: none;
+      border: none;
+      #site-update-nav {
+        .refresh-btn {
+          background-color: $secondaryColor;
+          margin-right: 10px;
+          width: 52px;
+          border-radius: 5px;
+          a {
+            border: none;
+            background: none;
+            color: $mainColor;
+            font-size: 20px;
+          }
+          &.refreshing {
+            a {
+              i {  
+                transition: all 1s linear;
+                -ms-transform: rotate(360deg); /* IE 9 */
+                -webkit-transform: rotate(360deg); /* Chrome, Safari, Opera */
+                transform: rotate(360deg);
+              }
+            }
+          }
+        }
+      }
+    }
+    .list-group {
+      ul {
+        padding: 0px;
+        list-style: none;
+        li {
+          color: $secondaryColor;
+          font-size: 14px;
+          padding-bottom: 5px;
+          margin-bottom: 5px;
+          border-bottom: 1px dashed #CCC;
+        }
+      }
+    }
   }
 }
