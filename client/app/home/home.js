@@ -34,7 +34,7 @@ angular.module('myApp.home', ['ngRoute'])
   var squashballImage = '../assets/images/squash.png';
   var climbingImage = '../assets/images/climbing.png';
   var tennisballImage = '../assets/images/tennis.png';
-  var softballballImage = '../assets/images/softball.png';
+  var softballImage = '../assets/images/softball.png';
   var gymImage = '../assets/images/gym.png';
   var golfballImage = '../assets/images/golf.png';
   var baseballImage = '../assets/images/baseball.png';
@@ -53,7 +53,7 @@ angular.module('myApp.home', ['ngRoute'])
     'Baseball': 'Baseball Field',
     'Softball': 'Softball Field',
     'Gym': 'Gym',
-    'Rock Climbing': 'Climbing Gym',
+    'Rock-Climbing': 'Climbing Gym',
     'Golf': 'Golf Course',
     'Racquetball': 'Racquetball Court',
     'Squash': 'Squash Court'
@@ -205,7 +205,7 @@ angular.module('myApp.home', ['ngRoute'])
       // Bolder the text in the site list
       $('*[data-placeId').css("font-weight", "normal");
       $('*[data-placeId=' + place.place_id + ']').css("font-weight", "bold");
-      
+
       // Show site info popin
       infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
       infowindow.open($scope.map, this);
@@ -221,8 +221,9 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // POPULATE SITE LIST FOR SELECTED SPORT
-  $scope.populateList = function(keyword, rankByFlag) {
+  $scope.populateList = function(keyword, sport, rankByFlag) {
     $scope.currentRankByFlag = rankByFlag;
+    $scope.selectedSport = sport;
     
     if (keyword != undefined) { // if keyword is passed in, save it
       $scope.currentKeyword = keyword;
