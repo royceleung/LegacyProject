@@ -29,6 +29,17 @@ angular.module('myApp.home', ['ngRoute'])
   };
   var userMarkerImage = '../assets/images/centerFlag.png';
   var blueDotImage = '../assets/images/bluedot.png';
+  var basketballImage = '../assets/images/basketball.png';
+  var soccerballImage = '../assets/images/soccer.png';
+  var squashballImage = '../assets/images/squash.png';
+  var climbingImage = '../assets/images/climbing.png';
+  var tennisballImage = '../assets/images/tennis.png';
+  var softballballImage = '../assets/images/softball.png';
+  var gymImage = '../assets/images/gym.png';
+  var golfballImage = '../assets/images/golf.png';
+  var baseballImage = '../assets/images/baseball.png';
+  var racketballImage = '../assets/images/racketball.png';
+
   var markers = [];
   var infowindow;
   var geocoder;
@@ -155,7 +166,7 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // CREATE MARKERS FOR SITES
-  $scope.createMarker = function(place) {
+  $scope.createMarker = function(place, keyword) {
     var placeLoc = place.geometry.location;
     var placeVicinity = place.vicinity;
     var placeName = place.name;
@@ -168,11 +179,27 @@ angular.module('myApp.home', ['ngRoute'])
     } else {
       placeOpenNow = '';
     }
+
+    var iconMarkerImg;
+    console.log(keyword);
+    if (keyword === "Basketball Court") { iconMarkerImg = basketballImage; }
+    if (keyword === "Soccer Field") { iconMarkerImg = soccerballImage; }
+    if (keyword === "Tennis Court") { iconMarkerImg = tennisballImage; }
+    if (keyword === "Baseball Field") { iconMarkerImg = baseballImage; }
+    if (keyword === "Softball Field") { iconMarkerImg = softballImage; }
+    if (keyword === "Gym") { iconMarkerImg = gymImage; }
+    if (keyword === "Climbing Gym") { iconMarkerImg = climbingImage; }
+    if (keyword === "Golf Course") { iconMarkerImg = golfballImage; }
+    if (keyword === "Racquetball Court") { iconMarkerImg = racketballImage; }
+    if (keyword === "Squash Court") { iconMarkerImg = squashballImage; }
+
+
     
     var marker = new google.maps.Marker({
       map: $scope.map,
       position: place.geometry.location,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
+      icon: iconMarkerImg
     });
 
     marker.addListener('click', function() { // add event listener for each marker
@@ -228,7 +255,7 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.$apply();  // force update the $scope
         
         results.forEach(function(place) {  // create markers for results
-          $scope.createMarker(place);
+          $scope.createMarker(place, keyword);
         });
       }
     }
