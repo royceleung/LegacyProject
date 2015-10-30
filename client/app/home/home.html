@@ -68,7 +68,7 @@
       <div class="list-group">
         <ul>
           <p ng-show="!sitesResults.length" class="empty-list">No results found</p>
-          <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)">
+          <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)" class="site-list-elm" data-placeId="{{elm.place_id}}">
             {{elm.name}}
             <span class="opening-info open-now" ng-show="{{elm.opening_hours.open_now}}">Open Now</span>
             <span class="opening-info close-now" ng-show="{{elm.opening_hours.open_now === false}}">Closed</span>

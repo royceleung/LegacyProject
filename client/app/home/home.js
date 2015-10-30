@@ -181,7 +181,6 @@ angular.module('myApp.home', ['ngRoute'])
     }
 
     var iconMarkerImg;
-    console.log(keyword);
     if (keyword === "Basketball Court") { iconMarkerImg = basketballImage; }
     if (keyword === "Soccer Field") { iconMarkerImg = soccerballImage; }
     if (keyword === "Tennis Court") { iconMarkerImg = tennisballImage; }
@@ -203,6 +202,11 @@ angular.module('myApp.home', ['ngRoute'])
     });
 
     marker.addListener('click', function() { // add event listener for each marker
+      // Bolder the text in the site list
+      $('*[data-placeId').css("font-weight", "normal");
+      $('*[data-placeId=' + place.place_id + ']').css("font-weight", "bold");
+      
+      // Show site info popin
       infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
       infowindow.open($scope.map, this);
     });
@@ -213,6 +217,7 @@ angular.module('myApp.home', ['ngRoute'])
 // CLICK EVENT LISTENER FOR SITE LIST
   $scope.siteListClick = function($index) {
     google.maps.event.trigger(markers[$index], 'click'); // trigger click event on respective marker
+
   };
 
 // POPULATE SITE LIST FOR SELECTED SPORT
