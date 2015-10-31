@@ -29,6 +29,17 @@ angular.module('myApp.home', ['ngRoute'])
   };
   var userMarkerImage = '../assets/images/centerFlag.png';
   var blueDotImage = '../assets/images/bluedot.png';
+  var basketballImage = '../assets/images/basketball.png';
+  var soccerballImage = '../assets/images/soccer.png';
+  var squashballImage = '../assets/images/squash.png';
+  var climbingImage = '../assets/images/climbing.png';
+  var tennisballImage = '../assets/images/tennis.png';
+  var softballImage = '../assets/images/softball.png';
+  var gymImage = '../assets/images/gym.png';
+  var golfballImage = '../assets/images/golf.png';
+  var baseballImage = '../assets/images/baseball.png';
+  var racketballImage = '../assets/images/racketball.png';
+
   var markers = [];
   var infowindow;
   var geocoder;
@@ -42,7 +53,7 @@ angular.module('myApp.home', ['ngRoute'])
     'Baseball': 'Baseball Field',
     'Softball': 'Softball Field',
     'Gym': 'Gym',
-    'Rock Climbing': 'Climbing Gym',
+    'Rock-Climbing': 'Climbing Gym',
     'Golf': 'Golf Course',
     'Racquetball': 'Racquetball Court',
     'Squash': 'Squash Court'
@@ -155,7 +166,7 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 // CREATE MARKERS FOR SITES
-  $scope.createMarker = function(place) {
+  $scope.createMarker = function(place, keyword) {
     var placeLoc = place.geometry.location;
     var placeVicinity = place.vicinity;
     var placeName = place.name;
@@ -168,14 +179,34 @@ angular.module('myApp.home', ['ngRoute'])
     } else {
       placeOpenNow = '';
     }
+
+    var iconMarkerImg;
+    if (keyword === "Basketball Court") { iconMarkerImg = basketballImage; }
+    if (keyword === "Soccer Field") { iconMarkerImg = soccerballImage; }
+    if (keyword === "Tennis Court") { iconMarkerImg = tennisballImage; }
+    if (keyword === "Baseball Field") { iconMarkerImg = baseballImage; }
+    if (keyword === "Softball Field") { iconMarkerImg = softballImage; }
+    if (keyword === "Gym") { iconMarkerImg = gymImage; }
+    if (keyword === "Climbing Gym") { iconMarkerImg = climbingImage; }
+    if (keyword === "Golf Course") { iconMarkerImg = golfballImage; }
+    if (keyword === "Racquetball Court") { iconMarkerImg = racketballImage; }
+    if (keyword === "Squash Court") { iconMarkerImg = squashballImage; }
+
+
     
     var marker = new google.maps.Marker({
       map: $scope.map,
       position: place.geometry.location,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
+      icon: iconMarkerImg
     });
 
     marker.addListener('click', function() { // add event listener for each marker
+      // Bolder the text in the site list
+      $('*[data-placeId').css("font-weight", "normal");
+      $('*[data-placeId=' + place.place_id + ']').css("font-weight", "bold");
+
+      // Show site info popin
       infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
       infowindow.open($scope.map, this);
     });
@@ -186,11 +217,13 @@ angular.module('myApp.home', ['ngRoute'])
 // CLICK EVENT LISTENER FOR SITE LIST
   $scope.siteListClick = function($index) {
     google.maps.event.trigger(markers[$index], 'click'); // trigger click event on respective marker
+
   };
 
 // POPULATE SITE LIST FOR SELECTED SPORT
-  $scope.populateList = function(keyword, rankByFlag) {
+  $scope.populateList = function(keyword, sport, rankByFlag) {
     $scope.currentRankByFlag = rankByFlag;
+    $scope.selectedSport = sport;
     
     if (keyword != undefined) { // if keyword is passed in, save it
       $scope.currentKeyword = keyword;
@@ -228,7 +261,7 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.$apply();  // force update the $scope
         
         results.forEach(function(place) {  // create markers for results
-          $scope.createMarker(place);
+          $scope.createMarker(place, keyword);
         });
       }
     }

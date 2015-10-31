@@ -9,6 +9,32 @@
               font-size: 18px;
             }
           }
+          &.selected-sport {
+            a {
+              padding-left: 20px;
+              color: $secondaryColor;
+              font-size: 16px;
+              font-weight: bold;
+              span{
+                background-size: cover;
+                position: relative;
+                top: 2px;
+                width: 16px;
+                height: 16px;
+                display: inline-block;
+                &.Basketball { background-image: url('../../assets/images/basketball.png'); }
+                &.Rock-Climbing { background-image: url('../../assets/images/climbing.png'); }
+                &.Baseball { background-image: url('../../assets/images/baseball.png'); }
+                &.Soccer { background-image: url('../../assets/images/soccer.png'); }
+                &.Tennis { background-image: url('../../assets/images/tennis.png'); }
+                &.Gym { background-image: url('../../assets/images/gym.png'); }
+                &.Golf { background-image: url('../../assets/images/golf.png'); }
+                &.Squash { background-image: url('../../assets/images/squash.png'); }
+                &.Softball { background-image: url('../../assets/images/softball.png'); }
+                &.Racquetball { background-image: url('../../assets/images/racketball.png'); }
+              }
+            }
+          }
         }
       }
       .address-selection {
@@ -62,6 +88,16 @@
           padding-bottom: 5px;
           margin-bottom: 5px;
           border-bottom: 1px dashed #CCC;
+          .opening-info {
+            padding-left: 10px;
+            font-weight: bold;
+            &.open-now {
+              color: #27ae60;
+            }
+            &.close-now {
+              color: #e74c3c;
+            }
+          }
         }
       }
     }
