@@ -1,0 +1,20 @@
+var mongoose = require('mongoose');
+var Q = require('q');
+var findOrCreate = require('mongoose-findorcreate');  // add findOrCreate functionality to Mongoose
+
+var siteSchema = new mongoose.Schema({
+  site_place_id : {
+    type: String,
+    required: false
+  },
+
+  sitename : {
+    type: String,
+    required: true
+  }
+
+});
+
+siteSchema.plugin(findOrCreate);
+
+module.exports = mongoose.model('sites', siteSchema);

@@ -5,6 +5,10 @@ var express = require('express');        // bring in express
 var bodyParser = require('body-parser'); // bring in body parser for parsing requests
 var router = require('../router.js');  // connect to our router
 var session = require('express-session');  // to enable user sessions
+var User = require('../models/userModel.js');  // our user schema
+var Site = require('../models/siteModel.js');  // our site schema
+var Q = require('q');  // promises library
+// var findOrCreate = require('mongoose-findorcreate');  // add findOrCreate functionality to Mongoose
 
 
 // AUTH & USER
@@ -15,13 +19,28 @@ exports.ensureAuthenticated = function(req, res, next) {  // make sure user auth
   res.redirect('/login')
 };
 
-exports.fetchUserInfo = function() {
-  // from FB example: res.render('account', { user: req.user });
-  // TODO: interact with db to get user's info
+exports.fetchUserInfoFromFB = function(req, res) {  // Get User info from FB
+  var fbUserInfo = {
+    "fbId": res.req.user.id,
+    "fbUserName": res.req.user.displayName,
+    "fbPicture": res.req.user.photos[0].value,
+  };
+
+  res.cookie('facebook', fbUserInfo);  // Set user info in cookies
+
+  exports.postUserInfo(fbUserInfo);
+
+  res.redirect('/');
 };
 
-exports.postUserInfo = function() {
-  // TODO: interact with db to post user's info
+exports.postUserInfo = function(userInfo) {  // post user info to our db
+  var userCreate = Q.nbind(User.findOrCreate, User);
+    newUser = {
+      'user_fb_id' : userInfo.fbId,
+      'username' : userInfo.fbUserName,
+      'photo': userInfo.fbPicture
+    };
+    userCreate(newUser);
 };
 
 
