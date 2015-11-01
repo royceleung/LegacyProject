@@ -4,15 +4,11 @@
 var express = require('express');        // bring in express
 var bodyParser = require('body-parser');  // bring in body parser for parsing requests
 var router = require('./router.js');  // add link to our router file
-// var session = require('express-session');    // enable sessions for user auth
 var Q = require('q');  // promises library
 var session = require('express-session');  // to enable user sessions
 var passport = require('passport');  // auth via passport
 var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via passport
 var cookieParser = require('cookie-parser');
-
-
-
 
 var User = require('./users/userModel.js');
 
@@ -41,13 +37,9 @@ app.use(express.static(__dirname + '../../client/app'));  // serve static files
 
 // all of our routes will be prefixed with /
 app.use('/', router);
-app.use('/login', router);
 app.use('/logout', router);
 app.use('/userinfo', router);
 app.use('/siteinfo', router);
-app.use('/map', router);
-app.use('/userlocation', router);
-app.use('/userauth', router);
 app.use('/auth/facebook',router);
 app.use('callback',router);
 
@@ -59,9 +51,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
-
-
-
 
 
 // SERVER INIT
