@@ -7,20 +7,6 @@ var router = require('../router.js');  // connect to our router
 var session = require('express-session');  // to enable user sessions
 
 
-// MAP
-exports.fetchMap = function(userLocation) {  // TODO: make this work
-  // default location for user
-
-  // http.request to Google for map
-
-  // serveMap();
-};
-
-exports.serveMap = function(req, res) {  // TODO: make this work
-  // res to client with map 
-};
-
-
 // AUTH & USER
 exports.ensureAuthenticated = function(req, res, next) {  // make sure user auth is valid, use this for anything that needs to be protected
   if (req.isAuthenticated()) {
