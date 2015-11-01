@@ -49,6 +49,15 @@
     #map {
       min-height : 500px;
       border: 1px solid $secondaryColor;
+      .infowindow-open {
+        font-weight: bold;
+        &.open {
+         color: $greenColor;
+        }
+        &.closed {
+          color: $redColor;
+        }
+      }
     }
     .site-update {
       background: none;
@@ -92,10 +101,10 @@
             padding-left: 10px;
             font-weight: bold;
             &.open-now {
-              color: #27ae60;
+              color: $greenColor;
             }
             &.close-now {
-              color: #e74c3c;
+              color: $redColor;
             }
           }
         }
