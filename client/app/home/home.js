@@ -171,13 +171,17 @@ angular.module('myApp.home', ['ngRoute'])
     var placeVicinity = place.vicinity;
     var placeName = place.name;
     var placeOpenNow;
+    var placeOpenNowClass;
 
     if (place.opening_hours && place.opening_hours.open_now) {  // not all Places have opening_hours property, will error on variable assign if they don't
       placeOpenNow = 'Open to play right now!';
+      placeOpenNowClass = 'open';
     } else if (place.opening_hours && !place.opening_hours.open_now) {
       placeOpenNow = 'Closed now, but check back again!';
+      placeOpenNowClass = 'closed';
     } else {
       placeOpenNow = '';
+      placeOpenNowClass = 'unknown';
     }
 
     var iconMarkerImg;
@@ -207,7 +211,7 @@ angular.module('myApp.home', ['ngRoute'])
       $('*[data-placeId=' + place.place_id + ']').css("font-weight", "bold");
 
       // Show site info popin
-      infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
+      infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open ' + placeOpenNowClass + '">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
       infowindow.open($scope.map, this);
     });
 
