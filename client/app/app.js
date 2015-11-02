@@ -7,24 +7,21 @@ angular.module('myApp', [
   'myApp.home'
 ])
 
-
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
     .otherwise({redirectTo: '/home'});
 }])
 
-
 .controller('mainController', ['$scope', '$cookies', function($scope, $cookies) {
-  // Retrieving a cookie
-  $scope.fbCookie = false;
-  var fbCookie = $cookies.get('facebook');
 
-  // Check if cookie exist
+// COOKIES
+  $scope.fbCookie = false;
+  var fbCookie = $cookies.get('facebook');  // get cookie from FB
+
   if (fbCookie) {
     fbCookie = fbCookie.split('j:');
-    fbCookie = JSON.parse(fbCookie[1]);
+    fbCookie = JSON.parse(fbCookie[1]);  // parse the cookie
 
-    // get User info from cookie
     var user = {
       'fbUserId' : fbCookie.fbId,
       'fbUserName' : fbCookie.fbUserName,
