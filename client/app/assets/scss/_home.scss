@@ -91,11 +91,16 @@
   }
   // Site list style block
   .list-group {
-    max-height: 500px;
-    overflow: scroll;
+    .empty-list {
+      margin-top: 10px;
+      font-weight: bold;
+      padding-left: 2px;
+    }
     ul {
       padding: 0px;
       list-style: none;
+      overflow: scroll;
+      max-height: 490px;
       li {
         color: $secondaryColor;
         font-size: 14px;
