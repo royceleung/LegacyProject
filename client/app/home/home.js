@@ -12,7 +12,7 @@ angular.module('myApp.home', ['ngRoute'])
   });
 }])
 
-.controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
+.controller('homeController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
 // $SCOPE VARIABLES
   $scope.map;
@@ -91,7 +91,7 @@ angular.module('myApp.home', ['ngRoute'])
     });
   };
 
-// CREATE A PERSISTENT CENTER MARKER
+// CREATE A PERSISTENT USER MARKER
   var drawUserMarker = function(position) {
     if (position == undefined) {
       position = $scope.map.getCenter();
@@ -105,7 +105,7 @@ angular.module('myApp.home', ['ngRoute'])
     userMarker.setMap($scope.map);  // set the new center marker
   };
 
-// DRAW A MAP WITH CENTER MARKER, ADD EVENT LISTENER TO REDRAW CENTER MARKER
+// DRAW A MAP WITH USER MARKER, ADD EVENT LISTENER TO REDRAW USER MARKER
   var getMap = function(latLngObj, zoomLevel) {
     $scope.map = new google.maps.Map(document.getElementById('map'), {  // draw map
       center: latLngObj,
@@ -265,15 +265,38 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.$apply();  // force update the $scope
         
         results.forEach(function(place) {  // create markers for results
-          $scope.createMarker(place, keyword);
+          $http.post('/siteinfo', place)  // post site info to server
+            .then(function successCallback(response) {
+              console.log('post request for ', place.name, ' successful!');
+              console.log('checkins for this site: ', response.data.checkins);
+              $scope.createMarker(place, keyword);
+            }, function errorCallback(response) {
+              console.error('database post error: ', error);
+            });
         });
       }
     }
   };
 
 
+// CHECKIN TO A SITE
+  $scope.siteCheckin = function(site) {  // TODO: to be executed by a button click
+    $http.post(url, site)  // makes a post request with the item that was clicked on
+      .then(function successCallback(response) {
+        console.log('checkin post request for ', site.name, ' successful!');
+        console.log('updated checkins for this site: ', response.data.checkins);
+  // TODO: UI updates with the new checkin count from server response
+        
+      }, function errorCallback(response) {
+        console.error('database post error: ', error);
+      });
 
+  // possible problems:
+    // mismatch between request/response bodies or the site body
+    // does the site body have all the info about a site, like the site_place_id?
+      // if not, how do we tie that info to each site?
+    // still need UI updates for click event and to display the checkin count
+  };
 
 }]);
-
 

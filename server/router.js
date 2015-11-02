@@ -7,32 +7,24 @@ var utils = require('./config/utils.js');  // bring in our utilities file
 var passport = require('passport');  // auth via passport
 var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via passport
 var session = require('express-session');  // to enable user sessions
-var User = require('./users/userModel.js');
+var User = require('./models/userModel.js');  // our user schema
+var Site = require('./models/siteModel.js');  // our site schema
 var router = express.Router();           // create our Express router
 var cookieParser = require('cookie-parser');
 
 
-router.get('/userinfo', /* if valid auth */ utils.fetchUserInfo);  //method to serve user info if auth is valid
+// router.get('/userinfo', /* if valid auth */ utils.fetchUserInfo);  //method to serve user info if auth is valid
 
 router.get('/siteinfo' /* method to get site info for sites on currently map */);
 
-router.post('/siteinfo' /* method to add/update site info */);
+router.post('/siteinfo', utils.postSiteInfo);
+
+router.post('/checkin', utils.siteCheckin);
 
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
-    function(req, res) {
-
-    // Get User info from FB
-    var fbUserInfo = {
-      "fbId":res.req.user.id,
-      "fbUserName":res.req.user.displayName,
-      "fbPicture":res.req.user.photos[0].value,
-    }
-
-    // Set user info in cookies
-    res.cookie('facebook', fbUserInfo);
-
-    res.redirect('/');
+  function(req, res) {
+    utils.fetchUserInfoFromFB(req, res);
   });
 
 router.get('/auth/facebook',
