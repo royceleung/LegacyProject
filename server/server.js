@@ -4,24 +4,34 @@
 var express = require('express');        // bring in express
 var bodyParser = require('body-parser');  // bring in body parser for parsing requests
 var router = require('./router.js');  // add link to our router file
-var Q = require('q');  // promises library
 var session = require('express-session');  // to enable user sessions
 var passport = require('passport');  // auth via passport
 var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via passport
 var cookieParser = require('cookie-parser');  // parses cookies
 var uriUtil = require('mongodb-uri');  // util for Mongo URIs
 
+// SCHEMA / MODELS
 var User = require('./models/userModel.js');
 var Site = require('./models/siteModel.js');
 
-var app = express();                 // define our app using express
-var port = process.env.PORT || 8080;        // set our port
+var app = express();     // define our app using express
+var port = process.env.PORT || 8080;   // set our port
+
+app.use(bodyParser.urlencoded({ extended: true })); // use bodyParser() for req body parsing
+app.use(bodyParser.json());
 
 // AUTH INIT
 app.use(session({ secret: 'this is the greenfield' }));
 app.use(passport.initialize());  // initialize passport
 app.use(passport.session());  // to support persistent login sessions
 app.use(cookieParser());
+
+passport.serializeUser(function(user, done) { // serialization is necessary for persistent sessions
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 
 // DATABASE
@@ -43,21 +53,12 @@ var mongooseOptions = {  // MongoLabs-suggested socket options
 };
 
 mongoose.connect(mongooseUri, mongooseOptions); // connect to our DB
-
 var db = mongoose.connection;
-
 db.on('error', console.error.bind(console, 'connection error: '));
-
-
-// configure app to use bodyParser() for request body parsing
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 
 // ROUTING
 app.use(express.static(__dirname + '../../client/app'));  // serve static files
-
-// all of our routes will be prefixed with /
 app.use('/', router);
 app.use('/logout', router);
 app.use('/userinfo', router);
@@ -68,21 +69,9 @@ app.use('/auth/facebook',router);
 app.use('callback',router);
 
 
-// AUTH
-  //  serialization is necessary for persistent sessions
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-
-
 // SERVER INIT
 app.listen(port);
 console.log('Unbalanced magic is happening on port ' + port);
-
 
 
 // DB TESTING - keep this! uncomment to test if db is connected

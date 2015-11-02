@@ -8,7 +8,6 @@ var session = require('express-session');  // to enable user sessions
 var User = require('../models/userModel.js');  // our user schema
 var Site = require('../models/siteModel.js');  // our site schema
 var Q = require('q');  // promises library
-// var findOrCreate = require('mongoose-findorcreate');  // add findOrCreate functionality to Mongoose
 
 
 // AUTH & USER
@@ -45,10 +44,6 @@ exports.postUserInfo = function(userInfo) {  // post user info to our db
 
 
 // SITES
-exports.fetchSiteInfo = function() {
-  // TODO: interact with db to get site's info
-};
-
 exports.postSiteInfo = function(req, res) {  // interact with db to post site's info
   var siteCreate = Q.nbind(Site.findOrCreate, Site);
   var siteFind = Q.nbind(Site.findOne, Site);
