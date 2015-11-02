@@ -21,6 +21,9 @@ router.post('/siteinfo', utils.postSiteInfo);
 
 router.post('/checkin', utils.siteCheckin);
 
+router.post('/checkout', utils.siteCheckout);
+
+
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {

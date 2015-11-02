@@ -58,8 +58,8 @@
             <span class="user-checkins">
               <i class="fa fa-user"></i>{{elm.checkins}}
             </span>
-            <button class="checkin-button checkin btn" ng-show="true">Checkin</button>
-            <button class="checkin-button checkout btn" ng-show="false">Checkout</button>
+            <button class="checkin-button checkin btn" ng-show="!elm.checkedin" ng-click="siteCheckin(elm)">Checkin</button>
+            <button class="checkin-button checkout btn" ng-show="elm.checkedin" ng-click="siteCheckout(elm)">Checkout</button>
             <span class="sitename" ng-click="siteListClick($index)"> {{elm.name}} </span>
             <span class="opening-info open-now" ng-show="{{elm.opening_hours.open_now}}">Open Now</span>
             <span class="opening-info close-now" ng-show="{{elm.opening_hours.open_now === false}}">Closed</span>

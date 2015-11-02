@@ -23,6 +23,7 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.currentRankByFlag;
   $scope.checkins;
 
+
 // OTHER VARIABLES
   var defaultLocation = {
     lat: 37.7833,
@@ -283,21 +284,27 @@ angular.module('myApp.home', ['ngRoute'])
 
 // CHECKIN TO A SITE
   $scope.siteCheckin = function(site) {  // TODO: to be executed by a button click
-    $http.post(url, site)  // makes a post request with the item that was clicked on
+    $http.post('/checkin', site)  // makes a post request with the item that was clicked on
       .then(function successCallback(response) {
         console.log('checkin post request for ', site.name, ' successful!');
         console.log('updated checkins for this site: ', response.data.checkins);
-  // TODO: UI updates with the new checkin count from server response
-        
+        site.checkins = response.data.checkins;
+        site.checkedin = true;
       }, function errorCallback(response) {
         console.error('database post error: ', error);
       });
+  };
 
-  // possible problems:
-    // mismatch between request/response bodies or the site body
-    // does the site body have all the info about a site, like the site_place_id?
-      // if not, how do we tie that info to each site?
-    // still need UI updates for click event and to display the checkin count
+  $scope.siteCheckout = function(site) {  // TODO: to be executed by a button click
+    $http.post('/checkout', site)  // makes a post request with the item that was clicked on
+      .then(function successCallback(response) {
+        console.log('checkout post request for ', site.name, ' successful!');
+        console.log('updated checkins for this site: ', response.data.checkins);
+        site.checkins = response.data.checkins;
+        site.checkedin = false;
+      }, function errorCallback(response) {
+        console.error('database post error: ', error);
+      });
   };
 
 }]);

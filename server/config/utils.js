@@ -71,7 +71,7 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
   );
 };
 
-exports.siteCheckin = function() {  //  update site checkin count and return new count
+exports.siteCheckin = function(req, res) {  //  update site checkin count and return new count
   var siteFind = Q.nbind(Site.findOne, Site);
 
   siteFind({
@@ -80,7 +80,24 @@ exports.siteCheckin = function() {  //  update site checkin count and return new
       if (err) {
         res.send('site lookup error: ', err);
       } else {
-        result.checkins.$inc();
+        result.checkins++;
+        result.save();
+        res.send(result);
+      }
+    }
+  );
+};
+
+exports.siteCheckout = function(req, res) {  //  update site checkin count and return new count
+  var siteFind = Q.nbind(Site.findOne, Site);
+
+  siteFind({
+    'site_place_id': req.body.place_id
+    }, 'checkins', function(err, result) {
+      if (err) {
+        res.send('site lookup error: ', err);
+      } else {
+        result.checkins--;
         result.save();
         res.send(result);
       }

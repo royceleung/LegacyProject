@@ -63,6 +63,7 @@ app.use('/logout', router);
 app.use('/userinfo', router);
 app.use('/siteinfo', router);
 app.use('/checkin', router);
+app.use('/checkout', router);
 app.use('/auth/facebook',router);
 app.use('callback',router);
 
