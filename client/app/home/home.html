@@ -54,8 +54,13 @@
       <div class="list-group">
         <ul>
           <p ng-show="!sitesResults.length" class="empty-list">No results found</p>
-          <li ng-repeat="elm in sitesResults | filter: siteSearch as results" ng-click="siteListClick($index)" class="site-list-elm" data-placeId="{{elm.place_id}}">
-            {{elm.name}}
+          <li ng-repeat="elm in sitesResults | filter: siteSearch as results" class="site-list-elm" data-placeId="{{elm.place_id}}">
+            <span class="user-checkins">
+              <i class="fa fa-user"></i>{{elm.checkins}}
+            </span>
+            <button class="checkin-button checkin btn" ng-show="true">Checkin</button>
+            <button class="checkin-button checkout btn" ng-show="false">Checkout</button>
+            <span class="sitename" ng-click="siteListClick($index)"> {{elm.name}} </span>
             <span class="opening-info open-now" ng-show="{{elm.opening_hours.open_now}}">Open Now</span>
             <span class="opening-info close-now" ng-show="{{elm.opening_hours.open_now === false}}">Closed</span>
           </li>

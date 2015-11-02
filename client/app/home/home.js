@@ -21,6 +21,7 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.currentKeyword;
   $scope.clickedPosition;
   $scope.currentRankByFlag;
+  $scope.checkins;
 
 // OTHER VARIABLES
   var defaultLocation = {
@@ -207,8 +208,8 @@ angular.module('myApp.home', ['ngRoute'])
 
     marker.addListener('click', function() { // add event listener for each marker
       // Bolder the text in the site list
-      $('*[data-placeId').css("font-weight", "normal");
-      $('*[data-placeId=' + place.place_id + ']').css("font-weight", "bold");
+      $('*[data-placeId] .sitename').css("font-weight", "normal");
+      $('*[data-placeId=' + place.place_id + '] .sitename').css("font-weight", "bold");
 
       // Show site info popin
       infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open ' + placeOpenNowClass + '">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
@@ -269,6 +270,7 @@ angular.module('myApp.home', ['ngRoute'])
             .then(function successCallback(response) {
               console.log('post request for ', place.name, ' successful!');
               console.log('checkins for this site: ', response.data.checkins);
+              place.checkins = response.data.checkins;
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
