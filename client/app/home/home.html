@@ -52,6 +52,9 @@
     <div class="col-xs-4 site-update-container">
 
       <div class="list-group">
+        <form class="search-form">
+          <input type="text" placeholder="Search" class="search-input form-control" ng-model="siteSearch">
+        </form>
         <ul>
           <p ng-show="!sitesResults.length" class="empty-list">No results found</p>
           <li ng-repeat="elm in sitesResults | filter: siteSearch as results" class="site-list-elm" data-placeId="{{elm.place_id}}">
