@@ -269,10 +269,10 @@ angular.module('myApp.home', ['ngRoute'])
             .then(function successCallback(response) {
               console.log('post request for ', place.name, ' successful!');
               console.log('checkins for this site: ', response.data.checkins);
-              $scope.createMarker(place, keyword);
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
+          $scope.createMarker(place, keyword);
         });
       }
     }
