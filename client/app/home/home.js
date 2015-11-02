@@ -12,7 +12,7 @@ angular.module('myApp.home', ['ngRoute'])
   });
 }])
 
-.controller('homeController', ['$scope', '$log','$http', function($scope, $log,$http) {
+.controller('homeController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
 // $SCOPE VARIABLES
   $scope.map;
@@ -91,7 +91,7 @@ angular.module('myApp.home', ['ngRoute'])
     });
   };
 
-// CREATE A PERSISTENT CENTER MARKER
+// CREATE A PERSISTENT USER MARKER
   var drawUserMarker = function(position) {
     if (position == undefined) {
       position = $scope.map.getCenter();
@@ -105,7 +105,7 @@ angular.module('myApp.home', ['ngRoute'])
     userMarker.setMap($scope.map);  // set the new center marker
   };
 
-// DRAW A MAP WITH CENTER MARKER, ADD EVENT LISTENER TO REDRAW CENTER MARKER
+// DRAW A MAP WITH USER MARKER, ADD EVENT LISTENER TO REDRAW USER MARKER
   var getMap = function(latLngObj, zoomLevel) {
     $scope.map = new google.maps.Map(document.getElementById('map'), {  // draw map
       center: latLngObj,
@@ -265,7 +265,16 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.$apply();  // force update the $scope
         
         results.forEach(function(place) {  // create markers for results
-          $scope.createMarker(place, keyword);
+          $http.post('/siteinfo', place)  // post site info to server
+            .then(function successCallback(response) {
+              // this callback will be called asynchronously
+              // when the response is available
+              console.log('post request for ', place.name, ' successful!');
+              console.log('checkins for this site: ', response.data.checkins);
+              $scope.createMarker(place, keyword);
+            }, function errorCallback(response) {
+              console.error('database post error: ', error);
+            });
         });
       }
     }
@@ -276,4 +285,7 @@ angular.module('myApp.home', ['ngRoute'])
 
 }]);
 
-
+// function tied to a button click
+  // makes a post request with the item that was clicked on
+  // server finds record and increases its checkin count by one, returns the new checkin count
+  // UI updates with the new checkin count

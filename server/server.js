@@ -85,15 +85,15 @@ console.log('Unbalanced magic is happening on port ' + port);
 
 // DB TESTING - keep this! uncomment to test if db is connected
   // var userCreate = Q.nbind(User.create, User);
-  // newUser = {
-  //   'user_fb_id' : 12345,
-  //   'username' : 'alex'
+  // var newUser = {
+  //  'user_fb_id' : 12345,
+  //  'username' : 'alex'
   // };
   // userCreate(newUser);
 
   // var siteCreate = Q.nbind(Site.create, Site);
-  // newSite = {
-  //   'site_place_id' : 54321,
-  //   'sitename' : 'JAMTOWN'
+  // var newSite = {
+  //  'site_place_id' : 54321,
+  //  'sitename' : 'JAMTOWN'
   // };
   // siteCreate(newSite);

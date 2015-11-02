@@ -11,6 +11,11 @@ var siteSchema = new mongoose.Schema({
   sitename : {
     type: String,
     required: true
+  },
+
+  checkins: {
+    type: Number,
+    required: false
   }
 
 });

@@ -17,7 +17,7 @@ var cookieParser = require('cookie-parser');
 
 router.get('/siteinfo' /* method to get site info for sites on currently map */);
 
-router.post('/siteinfo' /* method to add/update site info */);
+router.post('/siteinfo', utils.postSiteInfo);
 
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),

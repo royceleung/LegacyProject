@@ -35,12 +35,12 @@ exports.fetchUserInfoFromFB = function(req, res) {  // Get User info from FB
 
 exports.postUserInfo = function(userInfo) {  // post user info to our db
   var userCreate = Q.nbind(User.findOrCreate, User);
-    newUser = {
-      'user_fb_id' : userInfo.fbId,
-      'username' : userInfo.fbUserName,
-      'photo': userInfo.fbPicture
-    };
-    userCreate(newUser);
+  var newUser = {
+    'user_fb_id': userInfo.fbId,
+    'username': userInfo.fbUserName,
+    'photo': userInfo.fbPicture
+  };
+  userCreate(newUser);
 };
 
 
@@ -49,6 +49,25 @@ exports.fetchSiteInfo = function() {
   // TODO: interact with db to get site's info
 };
 
-exports.postSiteInfo = function() {
-  // TODO: interact with db to post site's info
+exports.postSiteInfo = function(req, res) {  // interact with db to post site's info
+  var siteCreate = Q.nbind(Site.findOrCreate, Site);
+  var siteFind = Q.nbind(Site.findOne, Site);
+  var newSite = {
+    'site_place_id': req.body.place_id,
+    'sitename': req.body.name,
+    'checkins': 0
+  };
+  siteCreate(newSite);
+
+  siteFind({
+    'site_place_id': req.body.place_id
+    }, 'checkins', function(err, result) {
+      if (err) {
+        res.send('site lookup error: ', err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+  // res.send(200);
 };

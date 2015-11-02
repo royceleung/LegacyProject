@@ -16,6 +16,11 @@ var userSchema = new mongoose.Schema({
   photo: {
     type: String,
     required: false
+  },
+
+  checkins: {
+    type: Array,
+    required: false
   }
 
 });
