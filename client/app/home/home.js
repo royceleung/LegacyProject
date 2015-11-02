@@ -269,8 +269,6 @@ angular.module('myApp.home', ['ngRoute'])
         results.forEach(function(place) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
-              console.log('post request for ', place.name, ' successful!');
-              console.log('checkins for this site: ', response.data.checkins);
               place.checkins = response.data.checkins;
             }, function errorCallback(response) {
               console.error('database post error: ', error);
@@ -286,8 +284,6 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.siteCheckin = function(site) {  // TODO: to be executed by a button click
     $http.post('/checkin', site)  // makes a post request with the item that was clicked on
       .then(function successCallback(response) {
-        console.log('checkin post request for ', site.name, ' successful!');
-        console.log('updated checkins for this site: ', response.data.checkins);
         site.checkins = response.data.checkins;
         site.checkedin = true;
       }, function errorCallback(response) {
@@ -298,8 +294,6 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.siteCheckout = function(site) {  // TODO: to be executed by a button click
     $http.post('/checkout', site)  // makes a post request with the item that was clicked on
       .then(function successCallback(response) {
-        console.log('checkout post request for ', site.name, ' successful!');
-        console.log('updated checkins for this site: ', response.data.checkins);
         site.checkins = response.data.checkins;
         site.checkedin = false;
       }, function errorCallback(response) {

@@ -2,6 +2,9 @@
 
   .navbar{
     &.site-selection {
+      .container-fluid {
+        padding-left: 0;
+      }
       ul {
         li {
           &.refresh-btn {
@@ -88,15 +91,34 @@
     }
   }
   .list-group {
+    max-height: 500px;
+    overflow: scroll;
     ul {
       padding: 0px;
       list-style: none;
       li {
         color: $secondaryColor;
         font-size: 14px;
-        padding-bottom: 5px;
+        padding-bottom: 0;
         margin-bottom: 5px;
         border-bottom: 1px dashed #CCC;
+        .sitename {
+          margin-bottom: 2px;
+        }
+        .user-checkins {
+          min-width: 30px;
+          display: inline-block;
+          i {
+            margin-right: 5px;
+          }
+        }
+        .checkin-button {
+          background: none;
+          font-size: 20px;
+          padding: 0;
+          margin-right: 5px;
+          line-height: 20px;
+        }
         .opening-info {
           padding-left: 10px;
           font-weight: bold;
