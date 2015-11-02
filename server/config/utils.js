@@ -69,5 +69,21 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
       }
     }
   );
-  // res.send(200);
+};
+
+exports.siteCheckin = function() {  //  update site checkin count and return new count
+  var siteFind = Q.nbind(Site.findOne, Site);
+
+  siteFind({
+    'site_place_id': req.body.place_id
+    }, 'checkins', function(err, result) {
+      if (err) {
+        res.send('site lookup error: ', err);
+      } else {
+        result.checkins.$inc();
+        result.save();
+        res.send(result);
+      }
+    }
+  );
 };

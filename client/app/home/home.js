@@ -267,8 +267,6 @@ angular.module('myApp.home', ['ngRoute'])
         results.forEach(function(place) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
-              // this callback will be called asynchronously
-              // when the response is available
               console.log('post request for ', place.name, ' successful!');
               console.log('checkins for this site: ', response.data.checkins);
               $scope.createMarker(place, keyword);
@@ -281,11 +279,24 @@ angular.module('myApp.home', ['ngRoute'])
   };
 
 
+// CHECKIN TO A SITE
+  $scope.siteCheckin = function(site) {  // TODO: to be executed by a button click
+    $http.post(url, site)  // makes a post request with the item that was clicked on
+      .then(function successCallback(response) {
+        console.log('checkin post request for ', site.name, ' successful!');
+        console.log('updated checkins for this site: ', response.data.checkins);
+  // TODO: UI updates with the new checkin count from server response
+        
+      }, function errorCallback(response) {
+        console.error('database post error: ', error);
+      });
 
+  // possible problems:
+    // mismatch between request/response bodies or the site body
+    // does the site body have all the info about a site, like the site_place_id?
+      // if not, how do we tie that info to each site?
+    // still need UI updates for click event and to display the checkin count
+  };
 
 }]);
 
-// function tied to a button click
-  // makes a post request with the item that was clicked on
-  // server finds record and increases its checkin count by one, returns the new checkin count
-  // UI updates with the new checkin count

@@ -19,6 +19,8 @@ router.get('/siteinfo' /* method to get site info for sites on currently map */)
 
 router.post('/siteinfo', utils.postSiteInfo);
 
+router.post('/checkin', utils.siteCheckin);
+
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
