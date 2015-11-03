@@ -6,9 +6,10 @@ Project Lead: Ryan James
 Scrum Master: Aaron Spafford  
 Developers: Kevin Aujla, Renan Deswarte, Alex Kim
 
+
 ## Summary
 
-Gäāme is a quick, easy way to find sports sites near you. After automatically locating your position or entering a custom address in the auto-fill search box, you can select from a variety of sports and view the sites closest to you. Click each site or marker to view more information about the site, and checkin to the site as well. Login via Facebook to store your favorite sports, sites, and checkins.
+Gäāme is a quick, easy way to find sports sites near you. After automatically locating your position or entering a custom address in the auto-fill search box, you can select from a variety of sports and view the sites closest to you. Click each site or marker to view more information about the site, and checkin to the site as well. Login via Facebook to store your favorite sports, sites, and checkins. And the site is fully function on mobile as well!
 
 
 ## Local Deployment
@@ -33,3 +34,11 @@ In [https://developers.facebook.com](facebook developers dashboard), under **My 
 `=====> Application deployed:`  
 `http://104.236.108.223:32780 (container)`
 
+
+## Future Features
+* A calendar to store future checkins for each site, allowing for scheduling of future meetups.
+* More site info, including photos. This could be displayed within the same view, or in a different view.
+* User profile pages, with additional user information including favorite sites, sports, and friends.
+* Social features and integration, using Facebook and Twitter to enable more social interaction. This could also include chat functionality or a forum for each site/sport.
+* Twilio integration for alerts / notifications about upcoming checkins and social features.
+* Mobile-specific site design.
