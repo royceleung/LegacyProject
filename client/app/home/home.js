@@ -41,7 +41,7 @@ angular.module('myApp.home', ['ngRoute'])
     lat: 37.7833,
     lng: -122.4167
   };
-  var userMarkerImage = '../assets/images/centerFlag.png';
+  var userMarkerImage = '../assets/images/centerflag.png';
   var blueDotImage = '../assets/images/bluedot.png';
   var sportIcons = {
     'Basketball Court': '../assets/images/basketball.png',
