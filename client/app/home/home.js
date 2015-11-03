@@ -21,30 +21,7 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.currentKeyword;
   $scope.clickedPosition;
   $scope.currentRankByFlag;
-
-// OTHER VARIABLES
-  var defaultLocation = {
-    lat: 37.7833,
-    lng: -122.4167
-  };
-  var userMarkerImage = '../assets/images/centerFlag.png';
-  var blueDotImage = '../assets/images/bluedot.png';
-  var basketballImage = '../assets/images/basketball.png';
-  var soccerballImage = '../assets/images/soccer.png';
-  var squashballImage = '../assets/images/squash.png';
-  var climbingImage = '../assets/images/climbing.png';
-  var tennisballImage = '../assets/images/tennis.png';
-  var softballImage = '../assets/images/softball.png';
-  var gymImage = '../assets/images/gym.png';
-  var golfballImage = '../assets/images/golf.png';
-  var baseballImage = '../assets/images/baseball.png';
-  var racketballImage = '../assets/images/racketball.png';
-
-  var markers = [];
-  var infowindow;
-  var geocoder;
-  var userMarker;
-  var searchLocation;
+  $scope.checkins;
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -59,32 +36,45 @@ angular.module('myApp.home', ['ngRoute'])
     'Squash': 'Squash Court'
   };
 
-
-// AUTH METHODS
-  $scope.loginFacebook = function() {
-    return $http({
-      method: 'GET',
-      url: '/auth/facebook'
-    })
-    .then(function (resp) {
-      return resp.data;
-    });
+// OTHER VARIABLES
+  var defaultLocation = {  // this is SF
+    lat: 37.7833,
+    lng: -122.4167
   };
+  var userMarkerImage = '../assets/images/centerflag.png';
+  var blueDotImage = '../assets/images/bluedot.png';
+  var sportIcons = {
+    'Basketball Court': '../assets/images/basketball.png',
+    'Soccer Field': '../assets/images/soccer.png',
+    'Tennis Court': '../assets/images/tennis.png',
+    'Baseball Field': '../assets/images/baseball.png',
+    'Softball Field': '../assets/images/softball.png',
+    'Gym': '../assets/images/gym.png',
+    'Climbing Gym': '../assets/images/climbing.png',
+    'Golf Course': '../assets/images/golf.png',
+    'Racquetball Court': '../assets/images/racketball.png',
+    'Squash Court': '../assets/images/squash.png'
+  };
+  var markers = [];
+  var infowindow;
+  var geocoder;
+  var userMarker;
+  var searchLocation;
 
 
 // CHANGE USER'S LOCATION
   $scope.changeLocation = function(locationData) {
     geocoder = new google.maps.Geocoder();  // init Geocoder
 
-    // Fix to get the google auto complete address
-    locationData = $('#location-search').val();
+    locationData = $('#location-search').val();  // get the auto-complete address
 
     geocoder.geocode(    // get LatLng for given address
       {'address': locationData},
       function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           getMap(results[0].geometry.location, 14);  // redraw map with new location
-          drawUserMarker(results[0].geometry.location);
+          drawUserMarker(results[0].geometry.location);  // draw a new marker in the center of the map
+          $scope.clickedPosition = results[0].geometry.location;  // searches will now be around the new marker
         } else {
           alert('Location change failed because: ' + status);
         }
@@ -143,7 +133,6 @@ angular.module('myApp.home', ['ngRoute'])
         });
         blueDotMarker.setMap($scope.map);  // set the blueDot marker
 
-
         $scope.map.setCenter($scope.userPosition);  // reset map with user position and closer zoom
         $scope.map.setZoom(14);
       },
@@ -154,10 +143,9 @@ angular.module('myApp.home', ['ngRoute'])
       handleLocationError(false, infoWindow, $scope.map.getCenter());
     }
 
-
      $scope.$apply();  // force update the $scope
 
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {  // this is specific to geolocation
       infoWindow.setPosition(pos);
       infoWindow.setContent(browserHasGeolocation ?
         'Error: The Geolocation service failed.' :
@@ -184,21 +172,9 @@ angular.module('myApp.home', ['ngRoute'])
       placeOpenNowClass = 'unknown';
     }
 
-    var iconMarkerImg;
-    if (keyword === "Basketball Court") { iconMarkerImg = basketballImage; }
-    if (keyword === "Soccer Field") { iconMarkerImg = soccerballImage; }
-    if (keyword === "Tennis Court") { iconMarkerImg = tennisballImage; }
-    if (keyword === "Baseball Field") { iconMarkerImg = baseballImage; }
-    if (keyword === "Softball Field") { iconMarkerImg = softballImage; }
-    if (keyword === "Gym") { iconMarkerImg = gymImage; }
-    if (keyword === "Climbing Gym") { iconMarkerImg = climbingImage; }
-    if (keyword === "Golf Course") { iconMarkerImg = golfballImage; }
-    if (keyword === "Racquetball Court") { iconMarkerImg = racketballImage; }
-    if (keyword === "Squash Court") { iconMarkerImg = squashballImage; }
-
-
+    var iconMarkerImg = sportIcons[keyword];  // see the sportIcons object at top
     
-    var marker = new google.maps.Marker({
+    var marker = new google.maps.Marker({  // draw the marker on the map
       map: $scope.map,
       position: place.geometry.location,
       animation: google.maps.Animation.DROP,
@@ -206,13 +182,11 @@ angular.module('myApp.home', ['ngRoute'])
     });
 
     marker.addListener('click', function() { // add event listener for each marker
-      // Bolder the text in the site list
-      $('*[data-placeId').css("font-weight", "normal");
-      $('*[data-placeId=' + place.place_id + ']').css("font-weight", "bold");
+      $('*[data-placeId] .sitename').css("font-weight", "normal");  // make text for list item bold
+      $('*[data-placeId=' + place.place_id + '] .sitename').css("font-weight", "bold");
 
-      // Show site info popin
       infowindow.setContent('<div class="infowindow-name">' + placeName + '</div><div class="infowindow-open ' + placeOpenNowClass + '">' + placeOpenNow + '</div><div class="infowindow-vicinity">' + placeVicinity + '</div');
-      infowindow.open($scope.map, this);
+      infowindow.open($scope.map, this);  // infowindow popup
     });
 
     markers.push(marker); // add each marker to markers array
@@ -221,11 +195,15 @@ angular.module('myApp.home', ['ngRoute'])
 // CLICK EVENT LISTENER FOR SITE LIST
   $scope.siteListClick = function($index) {
     google.maps.event.trigger(markers[$index], 'click'); // trigger click event on respective marker
-
   };
 
 // POPULATE SITE LIST FOR SELECTED SPORT
   $scope.populateList = function(keyword, sport, rankByFlag) {
+    /* We killed the "rankBy / orderBy" functionality because the results didn't seem to make much sense.
+    /* Google says RankBy.DISTANCE should give the closest results, but that doesn't seem to match up.
+    /* To reinstate: add a way to select between DISTANCE/PROMINENCE in the UI, then use the rankByFlag
+    /* to toggle, according to the code below.  */
+
     $scope.currentRankByFlag = rankByFlag;
     $scope.selectedSport = sport;
     
@@ -249,7 +227,7 @@ angular.module('myApp.home', ['ngRoute'])
       _.extend(request, { radius: '2000' });  // search radius in meters
     }
 
-    markers.forEach(function(marker) {
+    _.each(markers, function(marker) {
       marker.setMap(null);  // reset current markers on map
     });
 
@@ -264,11 +242,10 @@ angular.module('myApp.home', ['ngRoute'])
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
         
-        results.forEach(function(place) {  // create markers for results
+        _.each(results, function(place) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
-              console.log('post request for ', place.name, ' successful!');
-              console.log('checkins for this site: ', response.data.checkins);
+              place.checkins = response.data.checkins;
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
@@ -280,22 +257,24 @@ angular.module('myApp.home', ['ngRoute'])
 
 
 // CHECKIN TO A SITE
-  $scope.siteCheckin = function(site) {  // TODO: to be executed by a button click
-    $http.post(url, site)  // makes a post request with the item that was clicked on
+  $scope.siteCheckin = function(site) {  // triggered by click on site checkin button
+    $http.post('/checkin', site)  // makes a post request with the item that was clicked on
       .then(function successCallback(response) {
-        console.log('checkin post request for ', site.name, ' successful!');
-        console.log('updated checkins for this site: ', response.data.checkins);
-  // TODO: UI updates with the new checkin count from server response
-        
+        site.checkins = response.data.checkins;
+        site.checkedin = true;
       }, function errorCallback(response) {
         console.error('database post error: ', error);
       });
+  };
 
-  // possible problems:
-    // mismatch between request/response bodies or the site body
-    // does the site body have all the info about a site, like the site_place_id?
-      // if not, how do we tie that info to each site?
-    // still need UI updates for click event and to display the checkin count
+  $scope.siteCheckout = function(site) {  // triggered by click on site checkout button
+    $http.post('/checkout', site)  // makes a post request with the item that was clicked on
+      .then(function successCallback(response) {
+        site.checkins = response.data.checkins;
+        site.checkedin = false;
+      }, function errorCallback(response) {
+        console.error('database post error: ', error);
+      });
   };
 
 }]);

@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var Q = require('q');
 var findOrCreate = require('mongoose-findorcreate');  // add findOrCreate functionality to Mongoose
 
 var userSchema = new mongoose.Schema({

@@ -1,7 +1,11 @@
 #home-page {
 
+  // Map and sites navigation bar
   .navbar{
     &.site-selection {
+      .container-fluid {
+        padding-left: 0;
+      }
       ul {
         li {
           &.refresh-btn {
@@ -15,6 +19,7 @@
               color: $mainColor;
               font-size: 20px;
             }
+            // Set refreshing spinning animation
             &.refreshing {
               a {
                 i {
@@ -31,6 +36,7 @@
               font-size: 18px;
             }
           }
+          // Style for the selection sport display into the navbar
           &.selected-sport {
             a {
               padding-left: 20px;
@@ -67,10 +73,12 @@
     }
   }
 
+  // Map style block
   .map-site {
     #map {
       min-height : 500px;
       border: 1px solid $secondaryColor;
+      // Google map info for each site
       .infowindow-open {
         font-weight: bold;
         &.open {
@@ -81,22 +89,50 @@
       }
     }
   }
-  .site-update {
-    background: none;
-    border: none;
-    #site-update-nav {
-    }
-  }
+  // Site list style block
   .list-group {
+    .empty-list {
+      margin-top: 10px;
+      font-weight: bold;
+      padding-left: 2px;
+    }
     ul {
       padding: 0px;
       list-style: none;
+      overflow: scroll;
+      max-height: 490px;
       li {
         color: $secondaryColor;
         font-size: 14px;
-        padding-bottom: 5px;
-        margin-bottom: 5px;
+        padding: 8px 5px;
         border-bottom: 1px dashed #CCC;
+        &:hover {
+          cursor: pointer;
+          background-color: #EAEAEA;
+        }
+        // Site name
+        .sitename {
+          margin-bottom: 2px;
+        }
+        // User checkin icon and number
+        .user-checkins {
+          min-width: 30px;
+          display: inline-block;
+          i {
+            margin-right: 5px;
+          }
+        }
+        // User checkin button
+        .checkin-button, .checkin-button:focus  {
+          background: none;
+          font-size: 20px;
+          padding: 0;
+          margin-right: 5px;
+          line-height: 20px;
+          min-width: 25px;
+          text-align: left;
+          outline: none;
+        }
         .opening-info {
           padding-left: 10px;
           font-weight: bold;
