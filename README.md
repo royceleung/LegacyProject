@@ -45,3 +45,4 @@ The database is hosted on [mongolab](https://mongolab.com/). The DB connection i
 * Social features and integration, using Facebook and Twitter to enable more social interaction. This could also include chat functionality or a forum for each site/sport.
 * Twilio integration for alerts / notifications about upcoming checkins and social features.
 * Mobile-specific site design.
+
