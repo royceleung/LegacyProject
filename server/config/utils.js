@@ -32,6 +32,33 @@ exports.fetchUserInfoFromFB = function(req, res) {  // Get User info from FB
   res.redirect('/');
 };
 
+exports.getAllUsers = function(req, res) {
+  console.log('HELLO');
+  var userFind = Q.nbind(User.find, User);
+  userFind(function(err, result) {
+    if(err) {
+      console.log('site lookup error: ', err);
+    } else {
+      res.send(result);
+    }
+  })
+}
+
+exports.postUserFriends = function(user) {  // update user friends info in db
+  var userFind = Q.nbind(User.findOne, User);
+  userFind({
+    'username' : user
+  }, 'friends', function(err, result) {
+    if(err) {
+      res.send('site lookup error: ', err);
+    } else {
+      result.friends.push(user);
+      result.save();
+      res.send(result);
+    }
+  })
+}
+  
 exports.postUserInfo = function(userInfo) {  // post user info to our db
   var userCreate = Q.nbind(User.findOrCreate, User);
   var newUser = {

@@ -20,6 +20,8 @@ router.post('/checkin', utils.siteCheckin);
 
 router.post('/checkout', utils.siteCheckout);
 
+router.get('/getAllUsers', utils.getAllUsers);
+
 
 // AUTH
 router.get('/auth/facebook/callback',
@@ -42,8 +44,8 @@ router.get('/userauth', passport.authenticate('facebook', { failureRedirect: '/l
 
 passport.use( new FacebookStrategy({  // request fields from facebook
   profileFields: ['id', 'displayName', 'photos'],
-  clientID: '1664576320455716',
-  clientSecret: '018421cdfca61a8d10f6beacf9dabab4',
+  clientID: '991187507615516',
+  clientSecret: '2497d52367f7186ce655adb646d98f1b',
   callbackURL: '/auth/facebook/callback',
   enableProof: false
   },

@@ -3,16 +3,11 @@
 
 'use strict';
 
-angular.module('myApp.home', ['ngRoute'])
+angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {
-    templateUrl: 'home/home.html',
-    controller: 'homeController'
-  });
-}])
 
-.controller('homeController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+.controller('homeController', ['$scope', '$log', '$http', '$cookies', function($scope, $log, $http, $cookies) {
 
 // $SCOPE VARIABLES
   $scope.map;
@@ -22,6 +17,9 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.clickedPosition;
   $scope.currentRankByFlag;
   $scope.checkins;
+  $scope.allUsers = [];
+  $scope.user;
+  $scope.testUsers = [{name: "Royce Leung"}];
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -61,6 +59,30 @@ angular.module('myApp.home', ['ngRoute'])
   var userMarker;
   var searchLocation;
 
+
+ $scope.getAllUsers = function() {
+   $scope.fbCookie = false;
+  var fbCookie = $cookies.get('facebook');  // get cookie from FB
+
+  if (fbCookie) {
+    fbCookie = fbCookie.split('j:');
+    fbCookie = JSON.parse(fbCookie[1]);  // parse the cookie
+
+    var user = {
+      'fbUserId' : fbCookie.fbId,
+      'fbUserName' : fbCookie.fbUserName,
+      'fbPicture' : fbCookie.fbPicture
+    }
+    $scope.user = user;
+    $scope.fbCookie = true;
+
+    $http.get('/getAllUsers')
+    .then(function success(result) {
+      $scope.allUsers = result.data;
+      console.log('allUsers', $scope.allUsers);
+    })
+  }
+ }
 
 // CHANGE USER'S LOCATION
   $scope.changeLocation = function(locationData) {
@@ -276,6 +298,8 @@ angular.module('myApp.home', ['ngRoute'])
         console.error('database post error: ', error);
       });
   };
+
+
 
 }]);
 

@@ -20,6 +20,11 @@ var userSchema = new mongoose.Schema({
   checkins: {
     type: Array,
     required: false
+  },
+
+  friends: {
+    type: Array,
+    required: false
   }
 
 });

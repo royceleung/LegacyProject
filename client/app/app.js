@@ -4,12 +4,15 @@
 angular.module('myApp', [
   'ngRoute',
   'ngCookies',
-  'myApp.home'
+  'myApp.home' 
 ])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
-    .otherwise({redirectTo: '/home'});
+  .when('/home', {
+    templateUrl: 'home/home.html',
+    controller: 'homeController'
+  });
 }])
 
 .controller('mainController', ['$scope', '$cookies', function($scope, $cookies) {
