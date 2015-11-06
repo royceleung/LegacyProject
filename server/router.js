@@ -24,6 +24,9 @@ router.get('/getAllUsers', utils.getAllUsers);
 
 router.post('/addFriend', utils.addFriend);
 
+router.post('/postReview', utils.postReview);
+
+
 // AUTH
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),

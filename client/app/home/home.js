@@ -295,10 +295,11 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
         
-        _.each(results, function(place) {  // create markers for results
+        _.each(results, function(place, index) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
               place.checkins = response.data.checkins;
+              $scope.sitesResults[index].reviews = response.data.siteReviews;
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
@@ -311,7 +312,6 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
 // CHECKIN TO A SITE
   $scope.siteCheckin = function(site) {  // triggered by click on site checkin button
-    console.log("site", site);
     $http.post('/checkin', site)  // makes a post request with the item that was clicked on
       .then(function successCallback(response) {
         site.checkins = response.data.checkins;
@@ -331,7 +331,18 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
       });
   };
 
+  $scope.postReview = function(place_id, index, user, text) {
+    var data = {};
+    data.place_id = place_id;
+    data.user = user;
+    data.review = text;
 
-
+    $http.post('/postReview', data)
+      .then(function successCallback(response) {
+        $scope.sitesResults[index].reviews = response.data.siteReviews;
+      }, function errorCallback(error) {
+        console.error('error in post review', error);
+      });
+  };
 }]);
 
