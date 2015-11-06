@@ -12,6 +12,11 @@ var siteSchema = new mongoose.Schema({
     required: true
   },
 
+  siteReviews: {
+    type: Array,
+    required: false
+  },
+
   checkins: {
     type: Number,
     required: false

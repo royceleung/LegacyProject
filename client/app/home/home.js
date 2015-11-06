@@ -311,6 +311,7 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
 // CHECKIN TO A SITE
   $scope.siteCheckin = function(site) {  // triggered by click on site checkin button
+    console.log("site", site);
     $http.post('/checkin', site)  // makes a post request with the item that was clicked on
       .then(function successCallback(response) {
         site.checkins = response.data.checkins;
