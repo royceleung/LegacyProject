@@ -59,7 +59,7 @@ exports.addFriend = function(req, res) {  // update user friends info in db
     }
   })
 }
-  
+
 exports.postUserInfo = function(userInfo) {  // post user info to our db
   var userCreate = Q.nbind(User.findOrCreate, User);
   var newUser = {
@@ -73,22 +73,25 @@ exports.postUserInfo = function(userInfo) {  // post user info to our db
 
 // SITES
 exports.postSiteInfo = function(req, res) {  // interact with db to post site's info
+  console.log("req.body", req.body);
   var siteCreate = Q.nbind(Site.findOrCreate, Site);
   var siteFind = Q.nbind(Site.findOne, Site);
   var newSite = {
     'site_place_id': req.body.place_id,
     'sitename': req.body.name,
-    'checkins': 0
+    'siteReviews': [],
+    'checkins': 0    
   };
   siteCreate(newSite);
 
   siteFind({
     'site_place_id': req.body.place_id
-    }, 'checkins', function(err, result) {
+    }, 'checkins siteReviews', function(err, results) {
       if (err) {
         res.send('site lookup error: ', err);
       } else {
-        res.send(result);
+        res.send(results);
+        console.log("what i get", results);
       }
     }
   );
@@ -126,4 +129,22 @@ exports.siteCheckout = function(req, res) {  //  update site checkin count and r
       }
     }
   );
+};
+
+exports.postReview = function(req, res) {
+  console.log('my review is', req.body.review);
+  var siteFind = Q.nbind(Site.findOne, Site);
+
+  siteFind({
+    'site_place_id': req.body.place_id
+  }, 'siteReviews', function(err, result) {
+    if (err) {
+      res.send('error in retrieve reviews: ', err);
+    } else {
+      console.log('siteReviews are: ', result);
+      result.siteReviews.push({user: req.body.user, text: req.body.review});
+      result.save();
+      res.send(result);
+    }
+  })
 };

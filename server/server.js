@@ -69,6 +69,8 @@ app.use('/', router);
 // app.use('/checkout', router);
 // app.use('/auth/facebook',router);
 // app.use('callback',router);
+// app.use('/postReview', router);
+
 
 
 // SERVER INIT
@@ -80,8 +82,8 @@ console.log('Unbalanced magic is happening on port ' + port);
   // var userCreate = Q.nbind(User.create, User);
   // var newUser = {
   //  'user_fb_id' : 12345,
-  //  'username' : 'BarackObama',
-  //  'friends' : 'Larry'
+  //  'friends' : 'Larry',
+  //  'username' : 'Jia'
   // };
   // userCreate(newUser);
 
