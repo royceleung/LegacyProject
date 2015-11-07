@@ -5,6 +5,7 @@ angular.module('myApp', [
   'ngRoute',
   'ngCookies',
   'myApp.home' 
+
 ])
 
 .config(['$routeProvider', function($routeProvider) {

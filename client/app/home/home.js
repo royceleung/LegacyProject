@@ -310,26 +310,29 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-  $scope.eventList = [];
+  
 
-  $scope.events = function(place_id, sitename, sport, numPlayers, time, comment) {
+  $scope.events = function(place_id, sitename, events, sport, numPlayers, time, comment, index) {
     var container = {};
-    container.place_id = place_id;
-    container.sitename = sitename;
-    container.events = {
-      sport: sport,
-      numPlayers: numPlayers,
-      time: time,
-      place: sitename,
-      comment: comment
-    };
+    container.place_id = 'ChIJMb8k6YGAhYARcSOLWWOsvoI';
+    container.sitename = "Makersquare";
+    container.events = 
+       {
+        sport: "Basketball",
+        numPlayers: 12,
+        time: '600pm',
+        place: "Makersquare",
+        comment: "Free Bagels"
+      };
 
-
+    console.log("This is the events funciton");
     $http.post('/eventinfo', container)
       .then(function successCallback(results) {
             console.log("This is results in  ", results);
-            $scope.eventList.events = results;
+
+            $scope.sitesResults[index].events = results;
             console.log("this is $scope.eventList ", $scope.eventList);
+
         }, function errorCallback(error) {
             console.error("There is no events in post eventinfo ", error);
         });
