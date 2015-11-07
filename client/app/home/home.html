@@ -52,18 +52,33 @@
 
     <div class="col-xs-4 site-update-container">
           
-      <div>
+      <!-- <div> -->
+
+        <div class="tabs">
+          <div class="tab" ng-click="location=true;friends=false;events=false;">        
+            <input type="radio" id="tab-1" name="tab-group-1" checked />
+            <label for="tab-1">Location</label>
+          </div>
+          <div class="tab" ng-click="location=false;friends=true;events=false;">
+            <input type="radio" id="tab-2" name="tab-group-1"/>
+            <label for="tab-2">Friends</label>
+          </div>
+          <div class="tab" ng-click="location=false;friends=false;events=true;">
+            <input type="radio" id="tab-3" name="tab-group-1"/>
+            <label for="tab-3">Events</label>
+          </div>
+        </div>           
         <!-- Navigation tabs -->
-        <ul class="nav nav-tabs" role="tablist">
+<!--         <ul class="nav nav-tabs" role="tablist">
           <li ng-click="location=true;friends=false;events=false;"><button class="btn btn-xs btn-primary">Location</button></li>
           <li ng-click="location=false;friends=true;events=false;"><button class="btn btn-xs btn-primary">Friends</button></li>
           <li ng-click="location=false;friends=false;events=true;"><button class="btn btn-xs btn-primary">Events</button></li>
-        </ul>
+        </ul> -->
 
         <!-- Tab panes -->
-        <div class="tab-content">
+        <!-- <div> -->
           <!-- Home pane -->          
-          <div id="home" ng-show="location">
+          <div class="content" ng-show="location">
             <div class="list-group">
               <form class="search-form">
                 <input type="text" placeholder="Search" class="search-input form-control" ng-model="siteSearch">
@@ -126,7 +141,7 @@
 
 
           <!-- Friends pane -->  
-          <div id="friends" ng-show="friends">insert friends here
+          <div class="content" ng-show="friends">
             <div class="list-group">
               <form class="search-form">
                 <input type="text" placeholder="Friends" class="search-input form-control" ng-model="siteSearch.username">
@@ -146,10 +161,10 @@
           </div>
 
           <!-- Events pane -->  
-          <div id="events" ng-show="events">insert events here</div>
-        </div>
+          <div class="content" ng-show="events">insert events here</div>
+        <!-- </div> -->
 
-      </div> <!-- end of Tab panes -->     
+      <!-- </div> --> <!-- end of Tab panes -->     
 
     </div> <!-- end of site-update-container -->
   </div> <!-- end of map-site -->
