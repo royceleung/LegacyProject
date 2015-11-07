@@ -22,6 +22,7 @@ router.post('/checkout', utils.siteCheckout);
 
 router.get('/getAllUsers', utils.getAllUsers);
 
+router.post('/addFriend', utils.addFriend);
 
 // AUTH
 router.get('/auth/facebook/callback',

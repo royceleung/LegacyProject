@@ -12,7 +12,8 @@ angular.module('myApp', [
   .when('/home', {
     templateUrl: 'home/home.html',
     controller: 'homeController'
-  });
+  })
+  .otherwise({redirectTo: '/home'});
 }])
 
 .controller('mainController', ['$scope', '$cookies', function($scope, $cookies) {

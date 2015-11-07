@@ -24,6 +24,9 @@
           border-radius: 50%;
           border: 1px solid $mainColor;
         }
+        &.user-message {
+          margin: 8px 10px 0;
+        }
       }
       a {
         color: $mainColor;

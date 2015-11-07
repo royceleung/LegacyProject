@@ -38,7 +38,7 @@ passport.deserializeUser(function(obj, done) {
 // DATABASE
 var mongoose = require('mongoose');     // enable Mongoose for db
 // var mongodbUri = 'mongodb://ryan:gaaame@ds049104.mongolab.com:49104/gaaame_db';  // our DB URI
-var mongodbUri = 'mongodb://xrkl2x:stickdeath1221@ds049854.mongolab.com:49854/gamefinder';
+var mongodbUri = 'mongodb://royce1221:royce1221@ds049854.mongolab.com:49854/gamefinder';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);  // formatting for Mongoose
 
 var mongooseOptions = {  // MongoLabs-suggested socket options

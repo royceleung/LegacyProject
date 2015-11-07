@@ -19,7 +19,8 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
   $scope.checkins;
   $scope.allUsers = [];
   $scope.user;
-  $scope.testUsers = [{name: "Royce Leung"}];
+  $scope.friendAdded = false;
+  $scope.theUser;
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -61,7 +62,7 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
 
  $scope.getAllUsers = function() {
-   $scope.fbCookie = false;
+ fbCookie = false;
   var fbCookie = $cookies.get('facebook');  // get cookie from FB
 
   if (fbCookie) {
@@ -80,9 +81,39 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
     .then(function success(result) {
       $scope.allUsers = result.data;
       console.log('allUsers', $scope.allUsers);
+      for(var i = 0; i < $scope.allUsers.length; i++) {
+        $scope.allUsers[i].friended = false;
+        if($scope.allUsers[i].username === $scope.user.fbUserName) {
+          $scope.theUser = $scope.allUsers[i];
+        }
+      }
+      for(var i = 0; i < $scope.theUser.friends.length; i++) {
+        for(var j = 0; j < $scope.allUsers.length; j++) {
+          if($scope.theUser.friends[i] === $scope.allUsers[j].username) {
+            console.log('Found a friend');
+            $scope.allUsers[j].friended = true;
+          }
+        }
+      }
     })
   }
  }
+
+ $scope.addFriend = function(user) {
+  console.log('Adding as friend: ', user);
+  $http.post('/addFriend', { user: $scope.user, friend: user})
+  .then(function success(result) {
+    var friend = result.data[result.data.length-1];
+    console.log('added friend to database: ', friend);
+    for(var i = 0; i < $scope.allUsers.length; i++) {
+      if($scope.allUsers[i].username === friend) {
+        $scope.allUsers[i].friended = true;
+      }
+    }
+  })
+}
+ 
+
 
 // CHANGE USER'S LOCATION
   $scope.changeLocation = function(locationData) {
