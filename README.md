@@ -1,4 +1,4 @@
-# GāME
+g# GāME
 
 Unbalanced ()) team greenfield project
 

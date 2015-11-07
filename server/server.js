@@ -39,6 +39,7 @@ passport.deserializeUser(function(obj, done) {
 var mongoose = require('mongoose');     // enable Mongoose for db
 // var mongodbUri = 'mongodb://ryan:gaaame@ds049104.mongolab.com:49104/gaaame_db';  // our DB URI
 var mongodbUri = 'mongodb://royce1221:royce1221@ds049854.mongolab.com:49854/gamefinder';
+
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);  // formatting for Mongoose
 
 var mongooseOptions = {  // MongoLabs-suggested socket options
@@ -70,6 +71,7 @@ app.use('/', router);
 // app.use('/auth/facebook',router);
 // app.use('callback',router);
 // app.use('/postReview', router);
+// app.use('/eventinfo', router);
 
 
 
@@ -101,3 +103,4 @@ console.log('Unbalanced magic is happening on port ' + port);
   //     console.log("results", result);
   //   }
   // })
+
