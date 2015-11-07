@@ -289,8 +289,8 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
     var service = new google.maps.places.PlacesService($scope.map);  // init service
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
-
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
+
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
@@ -304,9 +304,39 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
               console.error('database post error: ', error);
             });
           $scope.createMarker(place, keyword);
+
         });
       }
     }
+  };
+
+  
+
+  $scope.events = function(place_id, sitename, events, sport, numPlayers, time, comment, index) {
+    var container = {};
+    container.place_id = 'ChIJMb8k6YGAhYARcSOLWWOsvoI';
+    container.sitename = "Makersquare";
+    container.events = 
+       {
+        sport: "Basketball",
+        numPlayers: 12,
+        time: '600pm',
+        place: "Makersquare",
+        comment: "Free Bagels"
+      };
+
+    console.log("This is the events funciton");
+    $http.post('/eventinfo', container)
+      .then(function successCallback(results) {
+            console.log("This is results in  ", results);
+
+            $scope.sitesResults[index].events = results;
+            console.log("this is $scope.eventList ", $scope.eventList);
+
+        }, function errorCallback(error) {
+            console.error("There is no events in post eventinfo ", error);
+        });
+
   };
 
 

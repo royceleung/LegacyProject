@@ -82,6 +82,7 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
     'siteReviews': [],
     'checkins': 0    
   };
+
   siteCreate(newSite);
 
   siteFind({
@@ -95,6 +96,31 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
       }
     }
   );
+};
+
+
+//Display Events
+exports.postEvents = function(req, res) {
+  var siteFind = Q.nbind(Site.findOne, Site);
+  var meetup = {
+    'site_place_id': req.body.place_id,
+    'sitename': req.body.name,
+    'events': req.body.events
+  };
+  
+
+  siteFind({
+    'site_place_id': req.body.place_id
+    }, 'events', function(err, result) {
+      if (err) {
+        res.send('site lookup error: ', err);
+      } else {
+        result.events.push(req.body.events);
+        res.send(result);
+      }
+    }
+  );
+
 };
 
 exports.siteCheckin = function(req, res) {  //  update site checkin count and return new count
