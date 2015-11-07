@@ -70,36 +70,21 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
 
 //Display Events
 exports.postEvents = function(req, res) {
-  var siteCreate = Q.nbind(Site.findOrCreate, Site);
   var siteFind = Q.nbind(Site.findOne, Site);
-  var events = {
+  var meetup = {
     'site_place_id': req.body.place_id,
     'sitename': req.body.name,
-    'events': {
-      sport: req.body.sport,  
-      numPlayers: req.body.numPlayers,
-      time: req.body.time,
-      place:  req.body.name,
-      comment: req.body.comment
-    }
+    'events': req.body.events
   };
-  events.site_place_id = req.body.place_id;
-  events.events.push({
-      sport: req.body.sport,  
-      numPlayers: req.body.numPlayers,
-      time: req.body.time,
-      place:  req.body.name,
-      comment: req.body.comment
-    });
-  console.log("events ", events);
-  siteCreate(events);
+  
 
   siteFind({
     'site_place_id': req.body.place_id
-    }, 'checkins', function(err, result) {
+    }, 'events', function(err, result) {
       if (err) {
         res.send('site lookup error: ', err);
       } else {
+        result.events.push(req.body.events);
         res.send(result);
       }
     }

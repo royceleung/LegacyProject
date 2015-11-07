@@ -4,8 +4,7 @@
 angular.module('myApp', [
   'ngRoute',
   'ngCookies',
-  'myApp.home',
-  'myApp.events'
+  'myApp.home'
 ])
 
 .config(['$routeProvider', function($routeProvider) {
