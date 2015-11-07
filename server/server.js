@@ -9,6 +9,7 @@ var passport = require('passport');  // auth via passport
 var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via passport
 var cookieParser = require('cookie-parser');  // parses cookies
 var uriUtil = require('mongodb-uri');  // util for Mongo URIs
+var Q = require('q');
 
 // SCHEMA / MODELS
 var User = require('./models/userModel.js');
@@ -36,7 +37,8 @@ passport.deserializeUser(function(obj, done) {
 
 // DATABASE
 var mongoose = require('mongoose');     // enable Mongoose for db
-var mongodbUri = 'mongodb://ryan:gaaame@ds049104.mongolab.com:49104/gaaame_db';  // our DB URI
+// var mongodbUri = 'mongodb://ryan:gaaame@ds049104.mongolab.com:49104/gaaame_db';  // our DB URI
+var mongodbUri = 'mongodb://royce1221:royce1221@ds049854.mongolab.com:49854/gamefinder';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);  // formatting for Mongoose
 
 var mongooseOptions = {  // MongoLabs-suggested socket options
@@ -60,13 +62,13 @@ db.on('error', console.error.bind(console, 'connection error: '));
 // ROUTING
 app.use(express.static(__dirname + '../../client/app'));  // serve static files
 app.use('/', router);
-app.use('/logout', router);
-app.use('/userinfo', router);
-app.use('/siteinfo', router);
-app.use('/checkin', router);
-app.use('/checkout', router);
-app.use('/auth/facebook',router);
-app.use('callback',router);
+// app.use('/logout', router);
+// app.use('/userinfo', router);
+// app.use('/siteinfo', router);
+// app.use('/checkin', router);
+// app.use('/checkout', router);
+// app.use('/auth/facebook',router);
+// app.use('callback',router);
 
 
 // SERVER INIT
@@ -78,13 +80,22 @@ console.log('Unbalanced magic is happening on port ' + port);
   // var userCreate = Q.nbind(User.create, User);
   // var newUser = {
   //  'user_fb_id' : 12345,
-  //  'username' : 'alex'
+  //  'username' : 'BarackObama',
+  //  'friends' : 'Larry'
   // };
   // userCreate(newUser);
 
-  // var siteCreate = Q.nbind(Site.create, Site);
-  // var newSite = {
-  //  'site_place_id' : 54321,
-  //  'sitename' : 'JAMTOWN'
-  // };
-  // siteCreate(newSite);
+  // // var siteCreate = Q.nbind(Site.create, Site);
+  // // var newSite = {
+  // //  'site_place_id' : 54321,
+  // //  'sitename' : 'JAMTOWN'
+  // // };
+  // // siteCreate(newSite);
+  // var userFind = Q.nbind(User.find, User);
+  // userFind(function(err, result) {
+  //   if(err) {
+  //     console.log('site lookup error: ', err);
+  //   } else {
+  //     console.log("results", result);
+  //   }
+  // })

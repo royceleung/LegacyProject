@@ -3,16 +3,11 @@
 
 'use strict';
 
-angular.module('myApp.home', ['ngRoute'])
+angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {
-    templateUrl: 'home/home.html',
-    controller: 'homeController'
-  });
-}])
 
-.controller('homeController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+.controller('homeController', ['$scope', '$log', '$http', '$cookies', function($scope, $log, $http, $cookies) {
 
 // $SCOPE VARIABLES
   $scope.map;
@@ -22,6 +17,10 @@ angular.module('myApp.home', ['ngRoute'])
   $scope.clickedPosition;
   $scope.currentRankByFlag;
   $scope.checkins;
+  $scope.allUsers = [];
+  $scope.user;
+  $scope.friendAdded = false;
+  $scope.theUser;
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -60,6 +59,60 @@ angular.module('myApp.home', ['ngRoute'])
   var geocoder;
   var userMarker;
   var searchLocation;
+
+
+ $scope.getAllUsers = function() {
+ fbCookie = false;
+  var fbCookie = $cookies.get('facebook');  // get cookie from FB
+
+  if (fbCookie) {
+    fbCookie = fbCookie.split('j:');
+    fbCookie = JSON.parse(fbCookie[1]);  // parse the cookie
+
+    var user = {
+      'fbUserId' : fbCookie.fbId,
+      'fbUserName' : fbCookie.fbUserName,
+      'fbPicture' : fbCookie.fbPicture
+    }
+    $scope.user = user;
+    $scope.fbCookie = true;
+
+    $http.get('/getAllUsers')
+    .then(function success(result) {
+      $scope.allUsers = result.data;
+      console.log('allUsers', $scope.allUsers);
+      for(var i = 0; i < $scope.allUsers.length; i++) {
+        $scope.allUsers[i].friended = false;
+        if($scope.allUsers[i].username === $scope.user.fbUserName) {
+          $scope.theUser = $scope.allUsers[i];
+        }
+      }
+      for(var i = 0; i < $scope.theUser.friends.length; i++) {
+        for(var j = 0; j < $scope.allUsers.length; j++) {
+          if($scope.theUser.friends[i] === $scope.allUsers[j].username) {
+            console.log('Found a friend');
+            $scope.allUsers[j].friended = true;
+          }
+        }
+      }
+    })
+  }
+ }
+
+ $scope.addFriend = function(user) {
+  console.log('Adding as friend: ', user);
+  $http.post('/addFriend', { user: $scope.user, friend: user})
+  .then(function success(result) {
+    var friend = result.data[result.data.length-1];
+    console.log('added friend to database: ', friend);
+    for(var i = 0; i < $scope.allUsers.length; i++) {
+      if($scope.allUsers[i].username === friend) {
+        $scope.allUsers[i].friended = true;
+      }
+    }
+  })
+}
+ 
 
 
 // CHANGE USER'S LOCATION
@@ -276,6 +329,8 @@ angular.module('myApp.home', ['ngRoute'])
         console.error('database post error: ', error);
       });
   };
+
+
 
 }]);
 
