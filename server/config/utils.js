@@ -59,7 +59,7 @@ exports.addFriend = function(req, res) {  // update user friends info in db
     }
   })
 }
-  
+
 exports.postUserInfo = function(userInfo) {  // post user info to our db
   var userCreate = Q.nbind(User.findOrCreate, User);
   var newUser = {
