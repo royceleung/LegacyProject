@@ -51,7 +51,8 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
     'site_place_id': req.body.place_id,
     'sitename': req.body.name,
     'checkins': 0
-  };
+    };
+  console.log("yo ", newSite);
   siteCreate(newSite);
 
   siteFind({
@@ -64,6 +65,46 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
       }
     }
   );
+};
+
+
+//Display Events
+exports.postEvents = function(req, res) {
+  var siteCreate = Q.nbind(Site.findOrCreate, Site);
+  var siteFind = Q.nbind(Site.findOne, Site);
+  var events = {
+    'site_place_id': req.body.place_id,
+    'sitename': req.body.name,
+    'events': {
+      sport: req.body.sport,  
+      numPlayers: req.body.numPlayers,
+      time: req.body.time,
+      place:  req.body.name,
+      comment: req.body.comment
+    }
+  };
+  events.site_place_id = req.body.place_id;
+  events.events.push({
+      sport: req.body.sport,  
+      numPlayers: req.body.numPlayers,
+      time: req.body.time,
+      place:  req.body.name,
+      comment: req.body.comment
+    });
+  console.log("events ", events);
+  siteCreate(events);
+
+  siteFind({
+    'site_place_id': req.body.place_id
+    }, 'checkins', function(err, result) {
+      if (err) {
+        res.send('site lookup error: ', err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+
 };
 
 exports.siteCheckin = function(req, res) {  //  update site checkin count and return new count

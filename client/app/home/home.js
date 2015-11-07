@@ -236,8 +236,8 @@ angular.module('myApp.home', ['ngRoute'])
 
     var service = new google.maps.places.PlacesService($scope.map);  // init service
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
-
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
+
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
@@ -250,9 +250,36 @@ angular.module('myApp.home', ['ngRoute'])
               console.error('database post error: ', error);
             });
           $scope.createMarker(place, keyword);
+
         });
       }
     }
+  };
+
+  $scope.eventList = [];
+
+  $scope.events = function(place_id, sitename, sport, numPlayers, time, comment) {
+    var container = {};
+    container.place_id = place_id;
+    container.sitename = sitename;
+    container.events = {
+      sport: sport,
+      numPlayers: numPlayers,
+      time: time,
+      place: sitename,
+      comment: comment
+    };
+
+
+    $http.post('/eventinfo', container)
+      .then(function successCallback(results) {
+            console.log("This is results in  ", results);
+            $scope.eventList.events = results;
+            console.log("this is $scope.eventList ", $scope.eventList);
+        }, function errorCallback(error) {
+            console.error("There is no events in post eventinfo ", error);
+        });
+
   };
 
 

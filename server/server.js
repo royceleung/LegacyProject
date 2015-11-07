@@ -9,6 +9,7 @@ var passport = require('passport');  // auth via passport
 var FacebookStrategy = require('passport-facebook').Strategy;  // FB auth via passport
 var cookieParser = require('cookie-parser');  // parses cookies
 var uriUtil = require('mongodb-uri');  // util for Mongo URIs
+var Q = require('q');
 
 // SCHEMA / MODELS
 var User = require('./models/userModel.js');
@@ -36,7 +37,7 @@ passport.deserializeUser(function(obj, done) {
 
 // DATABASE
 var mongoose = require('mongoose');     // enable Mongoose for db
-var mongodbUri = 'mongodb://ryan:gaaame@ds049104.mongolab.com:49104/gaaame_db';  // our DB URI
+var mongodbUri = 'mongodb://royce1221:royce1221@ds049854.mongolab.com:49854/gamefinder';  // our DB URI
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);  // formatting for Mongoose
 
 var mongooseOptions = {  // MongoLabs-suggested socket options
@@ -67,6 +68,7 @@ app.use('/checkin', router);
 app.use('/checkout', router);
 app.use('/auth/facebook',router);
 app.use('callback',router);
+app.use('/eventinfo', router);
 
 
 // SERVER INIT
@@ -82,9 +84,16 @@ console.log('Unbalanced magic is happening on port ' + port);
   // };
   // userCreate(newUser);
 
-  // var siteCreate = Q.nbind(Site.create, Site);
-  // var newSite = {
-  //  'site_place_id' : 54321,
-  //  'sitename' : 'JAMTOWN'
-  // };
-  // siteCreate(newSite);
+  var siteCreate = Q.nbind(Site.create, Site);
+  var newSite = {
+    'site_place_id': 'ChIJnS-EJM-AhYARYX4zAkEVsP8',
+    'sitename': 'Alta Plaza Park',
+    events:{
+      sport: 'Basketball',
+      numPlayer: 12,
+      time: '700pm',
+      palce: 'Orcale Arena',
+      comment: 'The best players on EARTH!!!!'
+    }
+  };
+  siteCreate(newSite);
