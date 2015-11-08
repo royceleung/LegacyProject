@@ -92,13 +92,13 @@ console.log('Unbalanced magic is happening on port ' + port);
   // };
   // userCreate(newUser);
 
-
   // // var siteCreate = Q.nbind(Site.create, Site);
   // // var newSite = {
   // //  'site_place_id' : 54321,
   // //  'sitename' : 'JAMTOWN'
   // // };
   // // siteCreate(newSite);
+
   // var userFind = Q.nbind(User.find, User);
   // userFind(function(err, result) {
   //   if(err) {
@@ -108,4 +108,25 @@ console.log('Unbalanced magic is happening on port ' + port);
   //   }
   // })
 
+  // var siteCreate = Q.nbind(Site.findOrCreate, Site);
+  // var siteFind = Q.nbind(Site.findOne, Site);
 
+  // var newSite = {
+  //  'site_place_id' : "54321",
+  //  'sitename' : 'JAMTOWN',
+  //  'averageRating' : 1
+  // };
+  // siteCreate(newSite).done(function(result) {
+  //     console.log('created siteReviews are: ', result);
+  // });
+
+  // siteFind({
+  //   'site_place_id': "54321"
+  // }, 'sitename', function(err, result) {
+  //     console.log("I am inside");
+
+  //     console.log('retrieved information is: ', result);
+
+  //     result.numberRating = 0;
+  //     result.save();
+  // })

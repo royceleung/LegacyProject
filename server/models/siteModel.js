@@ -12,6 +12,16 @@ var siteSchema = new mongoose.Schema({
     required: true
   },
 
+  numberRating: {
+    type: Number,
+    required: false
+  },
+
+  averageRating: {
+    type: Number,
+    required: false
+  },
+
   siteReviews: {
     type: Array,
     required: false

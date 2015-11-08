@@ -79,6 +79,8 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
   var newSite = {
     'site_place_id': req.body.place_id,
     'sitename': req.body.name,
+    'numberRating': 0,
+    'averageRating': 0,
     'siteReviews': [],
     'events': [],
     'checkins': 0    
@@ -91,12 +93,11 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
 
   siteFind({
     'site_place_id': req.body.place_id
-    }, 'site_place_id checkins siteReviews events', function(err, results) {
+    }, 'site_place_id checkins numberRating averageRating siteReviews events', function(err, results) {
       if (err) {
         res.send('site lookup error: ', err);
       } else {
         res.send(results);
-        console.log("what i get", results);
       }
     }
   );
@@ -164,17 +165,24 @@ exports.siteCheckout = function(req, res) {  //  update site checkin count and r
 };
 
 exports.postReview = function(req, res) {
-  console.log('my review is', req.body.review);
+  console.log('my text is', req.body.text);
   var siteFind = Q.nbind(Site.findOne, Site);
+  var user = req.body.user;
+  var text = req.body.text;
+  var rating = req.body.rating;
 
   siteFind({
     'site_place_id': req.body.place_id
-  }, 'siteReviews', function(err, result) {
+  }, 'numberRating averageRating siteReviews', function(err, result) {
     if (err) {
       res.send('error in retrieve reviews: ', err);
     } else {
       console.log('siteReviews are: ', result);
-      result.siteReviews.push({user: req.body.user, text: req.body.review});
+      if(rating >= 1 && rating <= 5) {
+        result.averageRating = (result.averageRating * result.numberRating + rating) / (result.numberRating + 1);
+        result.numberRating++;
+      }
+      result.siteReviews.push({user: user, text: text, rating: rating});
       result.save();
       res.send(result);
     }

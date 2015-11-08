@@ -302,7 +302,8 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
               place.checkins = response.data.checkins;
               $scope.sitesResults[index].reviews = response.data.siteReviews;
               $scope.sitesResults[index].events = response.data.events;
-              console.log('Events in siteResults: ', $scope.sitesResults);
+              $scope.sitesResults[index].numberRating = response.data.numberRating;
+              $scope.sitesResults[index].averageRating = response.data.averageRating;
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
@@ -361,18 +362,27 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
       });
   };
 
-  $scope.postReview = function(place_id, index, user, text) {
+  $scope.postReview = function(place_id, index, user, text, r) {
+    console.log('r', r);
     var data = {};
     data.place_id = place_id;
     data.user = user;
-    data.review = text;
-
+    data.text = text;
+    data.rating = $scope.rating;
+    console.log('My rating is: ', $scope.rating);
     $http.post('/postReview', data)
       .then(function successCallback(response) {
         $scope.sitesResults[index].reviews = response.data.siteReviews;
+        $scope.sitesResults[index].numberRating = response.data.numberRating;
+        $scope.sitesResults[index].averageRating = response.data.averageRating;        
       }, function errorCallback(error) {
         console.error('error in post review', error);
       });
   };
+
+  $scope.rate = function(rating) {
+    $scope.rating = rating;
+  }
 }]);
+
 

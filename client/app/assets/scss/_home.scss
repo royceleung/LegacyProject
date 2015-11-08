@@ -45,11 +45,33 @@
     .name {
       font-weight: bold;
     }
+    .review-container {
+      display: inline-block;
+    }
     .reviews {
       color: #337ab7;
       padding-left: 10px;
       font-weight: bold;
     }
+    .rating, .posted-rating {
+      display: inline-block;
+      unicode-bidi: bidi-override;
+      direction: rtl;
+    }
+    // >: the child combinator
+    .rating > span, .posted-rating > span {
+      display: inline-block;
+      position: relative;
+    }
+    .rating > span:hover:before,
+    .rating > span:hover ~ span:before,
+    span.rated:before,
+    span.rated ~ span:before {
+       color: #e3cf7a;
+       content: "\2605";
+       position: absolute;
+    }
+
   }
 
   // Map and sites navigation bar
