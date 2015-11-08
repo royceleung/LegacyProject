@@ -298,8 +298,11 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
         _.each(results, function(place, index) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
+              console.log('Events', response.data);
               place.checkins = response.data.checkins;
               $scope.sitesResults[index].reviews = response.data.siteReviews;
+              $scope.sitesResults[index].events = response.data.events;
+              console.log('Events in siteResults: ', $scope.sitesResults[index].events);
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
@@ -311,31 +314,26 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
   };
 
   
-
-  $scope.events = function(place_id, sitename, events, sport, numPlayers, time, comment, index) {
+//Create an Event
+  $scope.events = function(event) {
     var container = {};
-    container.place_id = 'ChIJMb8k6YGAhYARcSOLWWOsvoI';
-    container.sitename = "Makersquare";
+    container.place_id = //auto genrerate place_id;
+    container.sitename = //auto generate sitename;
     container.events = 
        {
-        sport: "Basketball",
-        numPlayers: 12,
-        time: '600pm',
-        place: "Makersquare",
-        comment: "Free Bagels"
+        sport: //figure out how to obtain the correct sport ,
+        numPlayers: event.numPlayers,
+        time: event.time,
+        place: //autofill with correct place
+        comment: event.comment
       };
 
-    console.log("This is the events funciton");
     $http.post('/eventinfo', container)
-      .then(function successCallback(results) {
-            console.log("This is results in  ", results);
-
-            $scope.sitesResults[index].events = results;
-            console.log("this is $scope.eventList ", $scope.eventList);
-
-        }, function errorCallback(error) {
-            console.error("There is no events in post eventinfo ", error);
-        });
+      .then(function successCallback(response) {
+        console.log("Reponse in $scope.event ", response);
+      }, function errorCallback(error) {
+          console.error("There is no events in post eventinfo ", error);
+      });
 
   };
 

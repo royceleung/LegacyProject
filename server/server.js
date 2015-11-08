@@ -73,7 +73,7 @@ app.use('/', router);
 // app.use('/auth/facebook',router);
 // app.use('callback',router);
 // app.use('/postReview', router);
-//app.use('/eventinfo', router);
+// app.use('/eventinfo', router);
 
 
 // SERVER INIT
