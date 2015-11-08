@@ -37,6 +37,21 @@
   [type=radio]:checked ~ label ~ .content {
     z-index: 1;
   }
+
+  #location-tab {
+    form {
+      display: inline-block;
+    }
+    .name {
+      font-weight: bold;
+    }
+    .reviews {
+      color: #337ab7;
+      padding-left: 10px;
+      font-weight: bold;
+    }
+  }
+
   // Map and sites navigation bar
   .navbar{
     &.site-selection {
