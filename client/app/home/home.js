@@ -302,7 +302,7 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
               place.checkins = response.data.checkins;
               $scope.sitesResults[index].reviews = response.data.siteReviews;
               $scope.sitesResults[index].events = response.data.events;
-              console.log('Events in siteResults: ', $scope.sitesResults[index].events);
+              console.log('Events in siteResults: ', $scope.sitesResults);
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
@@ -314,17 +314,18 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
   };
 
   
-//Create an Event
+// //Create an Event
+//TODO: fill in the proper values for keys
   $scope.events = function(event) {
     var container = {};
-    container.place_id = //auto genrerate place_id;
-    container.sitename = //auto generate sitename;
+    container.place_id = 0;//take from HTML elm.name or elm.site.place_id on line 90
+    container.sitename = "";//auto generate sitename;
     container.events = 
        {
-        sport: //figure out how to obtain the correct sport ,
+        sport: $scope.selectedSport,
         numPlayers: event.numPlayers,
         time: event.time,
-        place: //autofill with correct place
+        place: "",
         comment: event.comment
       };
 
