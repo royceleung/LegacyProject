@@ -17,6 +17,8 @@ var cookieParser = require('cookie-parser');
 router.post('/siteinfo', utils.postSiteInfo);
 router.post('/eventinfo', utils.postEvents); 
 
+router.post('/eventinfo', utils.postEvents); 
+
 router.post('/checkin', utils.siteCheckin);
 
 router.post('/checkout', utils.siteCheckout);

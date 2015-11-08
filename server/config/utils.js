@@ -80,14 +80,18 @@ exports.postSiteInfo = function(req, res) {  // interact with db to post site's 
     'site_place_id': req.body.place_id,
     'sitename': req.body.name,
     'siteReviews': [],
+    'events': [],
     'checkins': 0    
   };
+
+  console.log("Newsite.site_place_id ", req.body.place_id);
+  console.log("Newsite.sitename", req.body.name);
 
   siteCreate(newSite);
 
   siteFind({
     'site_place_id': req.body.place_id
-    }, 'checkins siteReviews', function(err, results) {
+    }, 'site_place_id checkins siteReviews events', function(err, results) {
       if (err) {
         res.send('site lookup error: ', err);
       } else {
@@ -107,6 +111,7 @@ exports.postEvents = function(req, res) {
     'sitename': req.body.name,
     'events': req.body.events
   };
+
   
 
   siteFind({
@@ -116,6 +121,7 @@ exports.postEvents = function(req, res) {
         res.send('site lookup error: ', err);
       } else {
         result.events.push(req.body.events);
+        result.save();
         res.send(result);
       }
     }
