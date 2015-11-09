@@ -82,6 +82,9 @@
       }
       ul {
         li {
+          &.user-message {
+          margin: 8px 20px 0px 0px;
+          }
           &.refresh-btn {
             background-color: $secondaryColor;
             margin-right: 10px;

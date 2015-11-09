@@ -21,6 +21,8 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
   $scope.user;
   $scope.friendAdded = false;
   $scope.theUser;
+  $scope.notifications = false;
+  $scope.notificationCounter;
 
   $scope.sports = {
     'Basketball': 'Basketball Court',
@@ -60,15 +62,25 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
   var userMarker;
   var searchLocation;
 
+  $scope.notificationChecker = function() {
+    $scope.notificationCounter = $scope.theUser.inviteFriend.length + $scope.theUser.eventInvites.length;
+    console.log($scope.notificationCounter);
+    if($scope.notificationCounter > 0) {
+        $scope.notifications = true;
+    } else {
+      $scope.notifications = false;
+    }
+  }
 
- $scope.getAllUsers = function() {
+
+$scope.getAllUsers = function() {
  fbCookie = false;
   var fbCookie = $cookies.get('facebook');  // get cookie from FB
-
+ 
   if (fbCookie) {
     fbCookie = fbCookie.split('j:');
     fbCookie = JSON.parse(fbCookie[1]);  // parse the cookie
-
+ 
     var user = {
       'fbUserId' : fbCookie.fbId,
       'fbUserName' : fbCookie.fbUserName,
@@ -76,44 +88,107 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
     }
     $scope.user = user;
     $scope.fbCookie = true;
-
+ 
     $http.get('/getAllUsers')
     .then(function success(result) {
       $scope.allUsers = result.data;
       console.log('allUsers', $scope.allUsers);
-      for(var i = 0; i < $scope.allUsers.length; i++) {
+      for(var i = 0; i < $scope.allUsers.length; i++) {   // set the friend status of all users to false;
         $scope.allUsers[i].friended = false;
-        if($scope.allUsers[i].username === $scope.user.fbUserName) {
+        $scope.allUsers[i].pending = false;
+        if($scope.allUsers[i].username === $scope.user.fbUserName) {  //set theUser as the current User;
           $scope.theUser = $scope.allUsers[i];
         }
       }
-      for(var i = 0; i < $scope.theUser.friends.length; i++) {
-        for(var j = 0; j < $scope.allUsers.length; j++) {
+      for(var i = 0; i < $scope.theUser.friends.length; i++) {  //find all friends for theUser
+        for(var j = 0; j < $scope.allUsers.length; j++) {       //set the friend status of found friends to true
           if($scope.theUser.friends[i] === $scope.allUsers[j].username) {
             console.log('Found a friend');
             $scope.allUsers[j].friended = true;
           }
         }
       }
+      console.log('Friend Requests: ', $scope.theUser.inviteFriend.length);
+      console.log('Event Invites:', $scope.theUser.eventInvites);
+      $scope.notificationChecker();
     })
   }
  }
 
- $scope.addFriend = function(user) {
+$scope.addFriend = function(user) {
   console.log('Adding as friend: ', user);
-  $http.post('/addFriend', { user: $scope.user, friend: user})
+  if($scope.theUser.username === user) {
+      $scope.theUser.inviteFriend.pop();
+      $scope.theUser.friends.push(user);
+  }
+  $scope.cancelFriendRequest();
+  $http.post('/addFriend', { user: $scope.user, friend: user})    //add a Friend to user;
   .then(function success(result) {
     var friend = result.data[result.data.length-1];
     console.log('added friend to database: ', friend);
     for(var i = 0; i < $scope.allUsers.length; i++) {
-      if($scope.allUsers[i].username === friend) {
+      if($scope.allUsers[i].username === friend) {    //set the friend status to true;
         $scope.allUsers[i].friended = true;
+        $scope.allUsers[i].pending = false;
       }
     }
+    $scope.notificationChecker();
   })
 }
  
-
+  $scope.sendEvents = function(event) {
+    console.log('My friends', $scope.theUser.friends);
+    $http.post('sendEvent', { user: $scope.user.username, friends: $scope.theUser.friends, event: event})
+    .then(function successCallback(response) {
+      console.log('Successfully sent friends this event', response);
+      console.log('Before userInvite: ', $scope.theUser.eventInvites);
+      if($scope.theUser.username === response.data[response.data.length-1].sender) {
+        console.log('Am i in here');
+      $scope.theUser.eventInvites = response.data;
+    }
+      $scope.notificationChecker();
+    })
+  }
+ 
+  $scope.cancelFriendRequest = function(user) {
+    console.log('removing Friend Request');
+    if(user) {
+      for(var j = 0; j < $scope.allUsers.length; j++) {       
+        if($scope.allUsers[j].username === user) {
+          $scope.allUsers[j].pending = false;
+        }
+      }
+    }
+    if($scope.theUser.username === user) {
+      $scope.theUser.inviteFriend.pop();
+    }
+    $http.post('/removeFriendRequest', {user: $scope.user})
+    .then(function success(result) {
+      console.log('removed this person from friends list', result.data);
+    })
+  }
+ 
+$scope.friendRequest = function(user) {
+  console.log('requesting as friend: ', user);
+  for(var j = 0; j < $scope.allUsers.length; j++) {       //set the friend status of found friends to true
+      if($scope.allUsers[j].username === user) {
+        $scope.allUsers[j].pending = true;
+      }
+  }
+  $http.post('/friendRequest', { user: $scope.user, friend: user})    //add a Friend to user;
+  .then(function success(result) {
+    var friend = result.data.friendRequest;
+    console.log('friendRequests in database', friend);
+    if($scope.theUser.username === user) {
+      console.log('adding myself as a friend request');
+      $scope.theUser.inviteFriend = friend;
+    }
+    
+    $scope.notificationChecker();
+ 
+    console.log('inviteFriend', $scope.theUser.inviteFriend);
+  })
+}
 
 // CHANGE USER'S LOCATION
   $scope.changeLocation = function(locationData) {
@@ -313,30 +388,36 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-  
 
-// //Create an Event
-//TODO: fill in the proper values for keys
+//Event Object
+$scope.mytime = null;
+ 
   $scope.events = function(event) {
+        $scope.mytime = event;  
+  };
+ 
+// //Create an Event
+  $scope.createEvent = function(event) {
     var container = {};
-    container.place_id = 0;//take from HTML elm.name or elm.site.place_id on line 90
-    container.sitename = "";//auto generate sitename;
-    container.events = 
-       {
-        sport: $scope.selectedSport,
-        numPlayers: event.numPlayers,
-        time: event.time,
-        place: "",
-        comment: event.comment
-      };
-
+    container.place_id = $scope.mytime.place_id;
+    container.sitename = $scope.mytime.name;
+    container.events =
+         {
+          sport: $scope.selectedSport,
+          date: event.date,
+          numPlayers: event.numPlayers,
+          time: event.times,
+          place: $scope.mytime.name,
+          comment: event.comment
+        };
+ 
     $http.post('/eventinfo', container)
       .then(function successCallback(response) {
-        console.log("Reponse in $scope.event ", response);
+        console.log("Reponse in $scope.createEvent ", response);
       }, function errorCallback(error) {
-          console.error("There is no events in post eventinfo ", error);
+          console.error("Failed in post eventinfo ", error);
       });
-
+ 
   };
 
 

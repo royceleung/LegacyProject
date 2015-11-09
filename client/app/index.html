@@ -43,11 +43,6 @@
         <li class="fb-info" ng-hide="fbCookie">
           <a href="/auth/facebook" class="fb-login"><img class='img-responsive' ng-src="../view1/signin.png"></a>
         </li>
-        <li class= "fb-info user-message" ng-hide="!fbCookie">
-          <button class="btn btn-primary navbar-bottom" type="button">
-            Messages <span class="badge">4</span>
-          </button>
-        </li>
         <li class="fb-info user-pic" ng-style="{'background-image':'url({{ user.fbPicture }})'}" ng-hide="!fbCookie">
         </li>
         <li class="fb-info" ng-hide="!fbCookie">

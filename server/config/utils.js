@@ -60,6 +60,63 @@ exports.addFriend = function(req, res) {  // update user friends info in db
   })
 }
 
+exports.sendEvent = function(req, res) {
+  console.log('called sendEvent with this body', req.body);
+  var friendFind = Q.nbind(User.findOne, User);
+  friendFind({
+    'username' : req.body.friends[0]
+  }, 'eventInvites', function(err, result) {
+    if(err) {
+      res.send('site lookup error: ', err);
+    } else {
+      var eventobj = req.body.event;
+      eventobj.sender = req.body.user;
+      result.eventInvites.push(eventobj);
+      result.save();
+      res.send(result.eventInvites);
+    }
+  })
+}
+ 
+exports.removeFriendRequest = function(req, res) {
+  var userFind = Q.nbind(User.findOne, User);
+  console.log("removing Friend in database");
+  userFind({
+    'username' : req.body.user.fbUserName
+  }, 'inviteFriend', function(err, result) {
+    if(err) {
+      res.send('site lookup error: ', err);
+    } else {
+      var deleted = result.inviteFriend[result.inviteFriend.length -1];
+      console.log('deleting this person', deleted);
+      result.inviteFriend.pop();
+      result.save();
+      res.send(result.inviteFriend);
+    }
+  })
+}
+ 
+exports.friendRequest = function(req, res) {
+  var userFind = Q.nbind(User.findOne, User);
+  console.log('adding myself to this friendRequest', req.body.friend);
+  userFind({
+    'username' : req.body.friend
+  }, 'inviteFriend', function(err, result) {
+    if(err) {
+      res.send('site lookup error: ', err);
+    } else {
+      console.log('RESULT', result);
+      result.inviteFriend.push(req.body.user.fbUserName);
+      // result.messageCount++;
+      result.save();
+      res.send({
+        friendRequest : result.inviteFriend,
+        // count : result.messageCount
+      })
+    }
+  })
+}
+
 exports.postUserInfo = function(userInfo) {  // post user info to our db
   var userCreate = Q.nbind(User.findOrCreate, User);
   var newUser = {
@@ -117,7 +174,7 @@ exports.postEvents = function(req, res) {
 
   siteFind({
     'site_place_id': req.body.place_id
-    }, 'events', function(err, result) {
+    }, 'site_place_id events', function(err, result) {
       if (err) {
         res.send('site lookup error: ', err);
       } else {
