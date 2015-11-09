@@ -2,10 +2,9 @@
 
 REPL Team Legacy Project
 
-Project Lead: Royce Leung
-Scrum Master: Cyrus Gomez
+Project Lead: Royce Leung  
+Scrum Master: Cyrus Gomez  
 Developers: Jordan Winkelman, Stephen Donahue, Jia Li
-
 
 ## Summary
 
