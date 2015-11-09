@@ -64,7 +64,7 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
   $scope.notificationChecker = function() {
     $scope.notificationCounter = $scope.theUser.inviteFriend.length + $scope.theUser.eventInvites.length;
-    console.log($scope.notificationCounter);
+    console.log('Number of of notifications: ', $scope.notificationCounter);
     if($scope.notificationCounter > 0) {
         $scope.notifications = true;
     } else {
@@ -138,10 +138,11 @@ $scope.addFriend = function(user) {
  
   $scope.sendEvents = function(event) {
     console.log('My friends', $scope.theUser.friends);
-    $http.post('sendEvent', { user: $scope.user.username, friends: $scope.theUser.friends, event: event})
+    $http.post('sendEvent', { user: $scope.user.fbUserName, friends: $scope.theUser.friends, event: event})
     .then(function successCallback(response) {
       console.log('Successfully sent friends this event', response);
       console.log('Before userInvite: ', $scope.theUser.eventInvites);
+      console.log('Sender for event: ', response.data[response.data.length-1].sender);
       if($scope.theUser.username === response.data[response.data.length-1].sender) {
         console.log('Am i in here');
       $scope.theUser.eventInvites = response.data;
@@ -390,24 +391,19 @@ $scope.friendRequest = function(user) {
 
 
 //Event Object
-$scope.mytime = null;
- 
-  $scope.events = function(event) {
-        $scope.mytime = event;  
-  };
  
 // //Create an Event
-  $scope.createEvent = function(event) {
-    var container = {};
-    container.place_id = $scope.mytime.place_id;
-    container.sitename = $scope.mytime.name;
+  $scope.createEvent = function(place, event) {
+   var container = {};
+    container.place_id = place.place_id;
+    container.sitename = place.name;
     container.events =
          {
           sport: $scope.selectedSport,
           date: event.date,
           numPlayers: event.numPlayers,
           time: event.times,
-          place: $scope.mytime.name,
+          place: event.name,
           comment: event.comment
         };
  
