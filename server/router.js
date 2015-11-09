@@ -23,9 +23,15 @@ router.post('/checkin', utils.siteCheckin);
 
 router.post('/checkout', utils.siteCheckout);
 
+router.post('/sendEvent', utils.sendEvent);
+ 
+router.post('/removeFriendRequest', utils.removeFriendRequest);
+ 
 router.get('/getAllUsers', utils.getAllUsers);
-
+ 
 router.post('/addFriend', utils.addFriend);
+ 
+router.post('/friendRequest', utils.friendRequest);
 
 router.post('/postReview', utils.postReview);
 
