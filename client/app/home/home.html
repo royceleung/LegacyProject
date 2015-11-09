@@ -212,13 +212,10 @@
                             <form novalidate class="simple-form">
                               <p>Sport: {{ selectedSport }}</p> <br />
                               <div>
-<<<<<<< HEAD
-                                <h4>Date:</h4><input type="text" ng-model="event.date" placeholder="mm/dd/yyyy">
-                                <h4>Time:</h4><input type="text" ng-model="event.times" placeholder="hr mm/ am/pm">
-=======
+
                                 <h4>Date:</h4><input type="date" ng-model="event.date" placeholder="mm/dd/yyyy">
                                 <h4>Time:</h4><input type="time" ng-model="event.times" placeholder="hr mm/ am/pm">
->>>>>>> 5a95847417546e946eab61accaf75deee8dea1b9
+                              
                               </div>
                               <br />
                               <br />
@@ -285,14 +282,10 @@
                       <span> Sport: {{ events.sport }} </span>
                       <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="sendEvents(events)">Invite Friends</button>
                       <br>
-<<<<<<< HEAD
-                      <span> Date: {{ events.date }} </span>
-                      <span> Time: {{ events.time }} </span>
-=======
+
                       <span> Date: {{ events.date | date:"longDate" }} </span>
                       <br>
                       <span> Time: {{ events.time | date:"shortTime" }} </span>
->>>>>>> 5a95847417546e946eab61accaf75deee8dea1b9
                       <br>
                       <span> Players: {{ events.numPlayers }} </span>
                       <br>
@@ -309,7 +302,7 @@
 
 </div> <!-- end -->
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCu2gwna7foZrV4In4pDqfP9rLW7hPMLxY&libraries=places&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
 
 
 <script>
