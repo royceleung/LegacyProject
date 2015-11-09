@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>GāME</title>
+    <title>Sports Locator</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -34,7 +34,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#/home">GāME</a>
+      <a class="navbar-brand" href="#/home">Sports Locator</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -42,11 +42,6 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="fb-info" ng-hide="fbCookie">
           <a href="/auth/facebook" class="fb-login"><img class='img-responsive' ng-src="../view1/signin.png"></a>
-        </li>
-        <li class= "fb-info user-message" ng-hide="!fbCookie">
-          <button class="btn btn-primary navbar-bottom" type="button">
-            Messages <span class="badge">4</span>
-          </button>
         </li>
         <li class="fb-info user-pic" ng-style="{'background-image':'url({{ user.fbPicture }})'}" ng-hide="!fbCookie">
         </li>

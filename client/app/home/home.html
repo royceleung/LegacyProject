@@ -34,6 +34,65 @@
           </li>
           
         </ul>
+
+        <ul class= " nav navbar-nav navbar-right">
+          <li class= "fb-info user-message" ng-hide="!fbCookie">
+            <button class="btn btn-success navbar-bottom" type="button">
+             My Events
+            </button>
+          </li>
+          <li class= "fb-info user-message" ng-hide="!fbCookie">
+            <button class="btn btn-primary navbar-bottom" type="button" ng-show="!notifications">
+             Messages
+            </button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalMessages" ng-hide="!notifications">
+            Messages <span class="badge">{{notificationCounter}}</span>
+            </button>
+ 
+            <!-- Modal -->
+            <div class="modal fade" id="myModalMessages" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notifications</h4>
+                  </div>
+                  <div class="content modal-body"> <!-- code starts here -->
+                    <div class="list-group">
+                      <ul>
+                        <h3>Friend Requests</h3>
+                        <p ng-show="!theUser.inviteFriend.length" class="empty-list">No Friend Requests</p>
+                        <li ng-repeat="elm in theUser.inviteFriend" class="site-list-elm" data-username="{{elm}}">
+                          <!-- <span class="" ng-style="{'background-image':'url({{ user.fbPicture }})'}">helllo</span> -->
+                          <p class="fa fa-user"> <b>{{elm}}</b> wants to add you as a friend! </p>
+                          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addFriend(elm)">Accept Request</button>
+ 
+                          <i class="fa fa-check-square-o pull-right" ng-show="elm.friended"></i>
+                        </li>
+                      </ul>
+                      <ul>
+                        <h3>Event Invites</h3>
+                        <p ng-show="!theUser.eventInvites.length" class="empty-list">No Event Invites</p>
+                        <li ng-repeat="elm in theUser.eventInvites" class="site-list-elm" data-event="{{elm}}">
+                          <p class="fa fa-users"> <b>{{elm.sender}}</b> invited you to an event! </p> <br>
+                          <p class="fa"> Where: {{ elm.place }} </p> <br>
+                          <p class="fa"> Sport: {{ elm.sport }} </p>
+                          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="theUser.eventInvites.pop();notificationChecker()">Attending</button> <br>
+                          <button type="button" class="btn btn-danger btn-xs pull-right" ng-click="theUser.eventInvites.pop();notificationChecker()">Not Attending</button> 
+                          <p class="fa"> Number of Players: {{ elm.numPlayers }} </p> <br>
+                          <p class="fa"> Time: {{ elm.time }} </p> <br>
+                          <p class="fa"> Comment: {{ elm.comment}} </p> <br>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        <ul>
       </div>
     </div>
   </nav>
@@ -85,9 +144,13 @@
                     </div>
                     {{elm.averageRating|number:1}}
                   </span>
+                  <!-- Create an Event Button trigger modal -->
+                  <button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#myEvents{{elm.place_id}}">
+                    Create Event
+                  </button>
                   <span class="opening-info open-now" ng-show="{{elm.opening_hours.open_now}}">Open Now</span>
-                  <span class="opening-info close-now" ng-show="{{elm.opening_hours.open_now === false}}">Closed</span>
-                  
+                  <span class="opening-info close-now" ng-show="{{elm.opening_hours.open_now === false}}">Closed</span>             
+
 
                   <!-- Modal -->
                   <div class="modal fade" id="myModal{{elm.place_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -132,8 +195,43 @@
                         </div>
                       </div>
                     </div>
-
                   </div>
+
+                  <!-- Events Modal -->
+                  <div class="modal fade" id="myEvents{{elm.place_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="myModalLabel">New Event</h4>
+                        </div>
+                        <div class="modal-body">
+                          
+                          <div>
+                            <p>Location: {{ elm.name }}</p>
+                            <form novalidate class="simple-form">
+                              <p>Sport: {{ selectedSport }}</p> <br />
+                              <div>
+                                <h4>Date:</h4><input type="text" ng-model="event.date" placeholder="mm/dd/yyyy">
+                                <h4>Time:</h4><input type="text" ng-model="event.times" placeholder="hr mm/ am/pm">
+                              </div>
+                              <br />
+                              <br />
+                              <form action="action_page.php">
+                                <h4>Number of Players :</h4>                              
+                                <input type="number" ng-model="event.numPlayers" min="0" max="10000">
+                              </form>
+                              <h4>Comment:</h4> <textarea ng-model="event.comment"></textarea> 
+                            </form>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" ng-click="createEvent(elm, $index, event)" data-dismiss="modal">Save changes</button>
+                        </div>
+                      </div>
+                    </div>  
+                  </div>                
 
                 </li>
               </ul>
@@ -147,20 +245,26 @@
               <form class="search-form">
                 <input type="text" placeholder="Friends" class="search-input form-control" ng-model="siteSearch.username">
               </form>
+             <!--  <ul>
+                <li ng-repeat="elm in theUser.friends" class="site-list-elm" data-username="{{elm}}">
+                  <p class="fa fa-user"> {{elm}} </p>
+                  <i class="fa fa-check-square-o pull-right"></i>
+              </ul> -->
               <ul>
                 <p ng-show="!allUsers.length" class="empty-list">No results found</p>
                 <li ng-repeat="elm in allUsers | filter: siteSearch as results" class="site-list-elm" data-username="{{elm.username}}">
                   <!-- <span class="" ng-style="{'background-image':'url({{ user.fbPicture }})'}">helllo</span> -->
                   <p class="fa fa-user"> {{elm.username}} </p>
-                  <a class="btn btn-default refresh-btn pull-right" ng-show="!elm.friended" type="button" ng-click="addFriend(elm.username)">
+                  <a class="btn btn-default refresh-btn pull-right" ng-show="!elm.friended && !elm.pending" type="button" ng-click="friendRequest(elm.username)">
                     <i class="fa fa-plus-square" ></i>
                   </a>
+                  <button type="button" class="btn btn-primary btn-xs pull-right" ng-show="elm.pending && !elm.friended" ng-click="cancelFriendRequest(elm.username)">Cancel Friend Request</button>
                   <i class="fa fa-check-square-o pull-right" ng-show="elm.friended"></i>
                 </li>
               </ul>
             </div>
           </div>
-
+ 
           <!-- Events pane -->  
           <div class="content" ng-show="events">
             <div class="list-group">
@@ -171,18 +275,23 @@
               <p ng-show="!sitesResults.length" class="empty-list">No Events</p>
                 <li ng-repeat="site in sitesResults | filter: event as results" class="site-list-elm" ng-show="site.events.length">
                   <ul>
-                    <li ng-repeat="events in site.events" ng-hide="location">
-                      <h2> Location: {{ events.place }} </h2>
-                      <p> Sport: {{ events.sport }} </p>
-                      <p> Number of Players: {{ events.numPlayers }} </p>
-                      <p> Time: {{ events.time }} </p>
-                      <p> Comment: {{ events.comment}} </p>
+                    <li ng-repeat="events in site.events" ng-show="!location">
+                      <h4> Location: {{ events.place }} </h4>
+                      <span> Sport: {{ events.sport }} </span>
+                      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="sendEvents(events)">Invite Friends</button>
+                      <br>
+                      <span> Date: {{ events.date }} </span>
+                      <span> Time: {{ events.time }} </span>
+                      <br>
+                      <span> Players: {{ events.numPlayers }} </span>
+                      <br>
+                      <span> Comment: {{ events.comment}} </span>
                   </li>
                   </ul>
                 </li>
               </ul>
             </div>
-          </div>   
+          </div>
 
     </div> <!-- end of site-update-container -->
   </div> <!-- end of map-site -->
