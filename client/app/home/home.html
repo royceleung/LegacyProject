@@ -1,6 +1,6 @@
 <!-- Write your code during your work -->
 <!-- Before push, cut and paste everything here into yourname.html -->
-<div id="home-page" ng-controller="homeController" ng-init="getAllUsers();location=true">
+<div id="home-page" ng-controller="homeController" ng-init="getAllUsers();location=true;friends=false;events=false;">
 
   <nav class="navbar navbar-default map-navbar row site-selection">
     <div class="container-fluid">
@@ -162,7 +162,27 @@
           </div>
 
           <!-- Events pane -->  
-          <div class="content" ng-show="events">insert events here</div>   
+          <div class="content" ng-show="events">
+            <div class="list-group">
+              <form class="search-form">
+                <input type="text" placeholder="Search Event" class="search-input form-control" ng-model="event">
+              </form>
+              <ul>
+              <p ng-show="!sitesResults.length" class="empty-list">No Events</p>
+                <li ng-repeat="site in sitesResults | filter: event as results" class="site-list-elm" ng-show="site.events.length">
+                  <ul>
+                    <li ng-repeat="events in site.events" ng-hide="location">
+                      <h2> Location: {{ events.place }} </h2>
+                      <p> Sport: {{ events.sport }} </p>
+                      <p> Number of Players: {{ events.numPlayers }} </p>
+                      <p> Time: {{ events.time }} </p>
+                      <p> Comment: {{ events.comment}} </p>
+                  </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>   
 
     </div> <!-- end of site-update-container -->
   </div> <!-- end of map-site -->

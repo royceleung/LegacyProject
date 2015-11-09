@@ -298,7 +298,6 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
         _.each(results, function(place, index) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
-              console.log('Events', response.data);
               place.checkins = response.data.checkins;
               $scope.sitesResults[index].reviews = response.data.siteReviews;
               $scope.sitesResults[index].events = response.data.events;
@@ -362,8 +361,7 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
       });
   };
 
-  $scope.postReview = function(place_id, index, user, text, r) {
-    console.log('r', r);
+  $scope.postReview = function(place_id, index, user, text) {
     var data = {};
     data.place_id = place_id;
     data.user = user;
