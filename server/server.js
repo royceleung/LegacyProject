@@ -88,7 +88,9 @@ console.log('Unbalanced magic is happening on port ' + port);
   // var newUser = {
   //  'user_fb_id' : 12345,
   //  'friends' : 'Larry',
-  //  'username' : 'Jia'
+  //  'username' : 'Ronald',
+  //  'inviteFriend' : ['Jia', 'alex'],
+  //  'messageCount' : 2
   // };
   // userCreate(newUser);
 
@@ -114,6 +116,13 @@ console.log('Unbalanced magic is happening on port ' + port);
   // var newSite = {
   //  'site_place_id' : "54321",
   //  'sitename' : 'JAMTOWN',
+  //   events:{
+  //     sport: 'Basketball',
+  //     numPlayer: 12,
+  //     time: '700pm',
+  //     palce: 'Orcale Arena',
+  //     comment: 'The best players on EARTH!!!!'
+  //   }
   //  'averageRating' : 1
   // };
   // siteCreate(newSite).done(function(result) {

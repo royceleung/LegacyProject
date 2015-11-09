@@ -25,7 +25,22 @@ var userSchema = new mongoose.Schema({
   friends: {
     type: Array,
     required: false
-  }
+  },
+
+  inviteFriend: {
+    type: Array,
+    required: false
+  },
+
+  messageCount: {
+    type: Number,
+    required: false
+  },
+
+  eventInvites: {
+    type: Array,
+    required: false 
+  }  
 
 });
 
