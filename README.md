@@ -1,4 +1,4 @@
-# Sport Locater
+# Sport Locator
 
 REPL Team Legacy Project
 
@@ -8,7 +8,7 @@ Developers: Jordan Winkelman, Stephen Donahue, Jia Li
 
 ## Summary
 
-Sport Locater is a quick, easy way to find sports sites near you. After automatically locating your position or entering a custom address in the auto-fill search box, you can select from a variety of sports and view the sites closest to you. Click each site or marker to view more information about the site, and checkin to the site as well. Login via Facebook to write reviews, create events and invite your friends to play. And the site is fully functional on mobile as well!
+Sport Locator is a quick, easy way to find sports sites near you. After automatically locating your position or entering a custom address in the auto-fill search box, you can select from a variety of sports and view the sites closest to you. Click each site or marker to view more information about the site, and checkin to the site as well. Login via Facebook to write reviews, create events and invite your friends to play. And the site is fully functional on mobile as well!
 
 
 ## Local Deployment
