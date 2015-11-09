@@ -289,8 +289,8 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
 
     var service = new google.maps.places.PlacesService($scope.map);  // init service
     service.nearbySearch(request, nearbySearchCallback);  // perform the search with given parameters
-
     function nearbySearchCallback(results, status) {  // this callback must handle the results object and the PlacesServiceStatus response
+
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         $scope.sitesResults = results; // populate site list with results
         $scope.$apply();  // force update the $scope
@@ -298,15 +298,45 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
         _.each(results, function(place, index) {  // create markers for results
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
+              console.log('Events', response.data);
               place.checkins = response.data.checkins;
               $scope.sitesResults[index].reviews = response.data.siteReviews;
+              $scope.sitesResults[index].events = response.data.events;
+              console.log('Events in siteResults: ', $scope.sitesResults);
             }, function errorCallback(response) {
               console.error('database post error: ', error);
             });
           $scope.createMarker(place, keyword);
+
         });
       }
     }
+  };
+
+  
+
+// //Create an Event
+//TODO: fill in the proper values for keys
+  $scope.events = function(event) {
+    var container = {};
+    container.place_id = 0;//take from HTML elm.name or elm.site.place_id on line 90
+    container.sitename = "";//auto generate sitename;
+    container.events = 
+       {
+        sport: $scope.selectedSport,
+        numPlayers: event.numPlayers,
+        time: event.time,
+        place: "",
+        comment: event.comment
+      };
+
+    $http.post('/eventinfo', container)
+      .then(function successCallback(response) {
+        console.log("Reponse in $scope.event ", response);
+      }, function errorCallback(error) {
+          console.error("There is no events in post eventinfo ", error);
+      });
+
   };
 
 

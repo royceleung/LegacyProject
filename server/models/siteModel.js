@@ -20,6 +20,10 @@ var siteSchema = new mongoose.Schema({
   checkins: {
     type: Number,
     required: false
+  },
+
+  events: {
+    type: Array
   }
 
 });
